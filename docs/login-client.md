@@ -5,7 +5,7 @@
 mkdir muni
 cd muni
 git clone git@github.com:MuniBillingLLC/dev-meta.git
-git clone git@github.com:MuniBillingLLC/dev-gems.git
+git clone git@github.com:MuniBillingLLC/muni-gems.git
 dev-meta/symlink 
 ```
 
@@ -14,7 +14,7 @@ dev-meta/symlink
 cd dev-meta
 git switch gems-mac
 
-cd dev-gems
+cd muni-gems
 git switch dev
 ```
 
