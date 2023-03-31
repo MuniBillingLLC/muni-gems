@@ -1,0 +1,10 @@
+# based on
+#   https://docs.github.com/en/get-started/getting-started-with-git/configuring-git-to-handle-line-endings
+#
+# All text files should have unix-style line endings
+* text eol=lf
+
+# Denote all files that are truly binary and should not be modified
+*.png binary
+*.jpg binary
+*.ttf binary
