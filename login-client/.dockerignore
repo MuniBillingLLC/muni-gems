@@ -1,0 +1,6 @@
+rails/.gitignore
+rails/.envrc
+rails/.idea
+rails/.run
+rails/log/*
+rails/tmp/*
