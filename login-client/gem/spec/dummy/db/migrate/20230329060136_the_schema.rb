@@ -8,7 +8,6 @@ class TheSchema < ActiveRecord::Migration[5.2]
       t.string  :name
       t.string  :email
       t.string  :api_key
-      t.boolean :locked_at
       t.timestamps
     end
 
