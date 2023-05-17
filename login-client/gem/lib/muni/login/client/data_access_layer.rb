@@ -19,6 +19,18 @@ module Muni
           end
         end
 
+        def find_customer_by_id(customer_id)
+          return nil if customer_id.nil?
+
+          cache_key = make_cache_key(
+            method_name: __method__,
+            customer_id: customer_id)
+
+          @cache.fetch(cache_key: cache_key) do
+            Customer.where(id: customer_id).first
+          end
+        end
+
         def find_secure_identity_by_sid(sid)
           return nil if sid.nil?
 
@@ -83,6 +95,10 @@ module Muni
               sid: decoded_token[:sub],
               issuer_url: decoded_token[:iss])
           end
+        end
+
+        def clear_cache
+          @cache.clear
         end
 
         private

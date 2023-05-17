@@ -10,6 +10,21 @@ RSpec.describe Muni::Login::Client::IdpKeep do
     Muni::Login::Client::IdpCache.new.clear
   end
 
+  describe "#customer" do
+    let(:customer) { FactoryBot.create(:customer) }
+    let(:secure_identity) do
+      FactoryBot.create(:secure_identity,
+                        mod_name: customer.class.name,
+                        mod_id: customer.id)
+    end
+    let(:subj) do
+      described_class.new(secure_identity: secure_identity)
+    end
+    it do
+      expect(subj.customer).to eq(customer)
+    end
+  end
+
   describe "#user" do
     let(:user) { FactoryBot.create(:user) }
     let(:secure_identity) do

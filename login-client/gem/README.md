@@ -8,7 +8,7 @@ gem build muni-login-client.gemspec
 
 ### Install the gem
 ```
-gem install ./muni-login-client-0.0.1.gem
+gem install ./muni-login-client-0.0.2.gem
 ```
 
 ### Use from IRB

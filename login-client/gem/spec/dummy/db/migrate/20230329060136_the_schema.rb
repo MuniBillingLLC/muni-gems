@@ -18,6 +18,14 @@ class TheSchema < ActiveRecord::Migration[5.2]
       t.timestamps
     end
 
+    create_table :customers do |t|
+      t.string  :first_name
+      t.string  :last_name
+      t.string  :email
+      t.boolean :locked_at
+      t.timestamps
+    end
+
     create_table :secure_identities do |t|
       t.string  :sid
       t.string  :mod_name

@@ -26,6 +26,10 @@ module Muni
           dal.find_api_user_by_id(secure_identity&.mod_id)
         end
 
+        def customer
+          dal.find_customer_by_id(secure_identity&.mod_id)
+        end
+
         def set_property(key, value)
           @properties[key] = value
         end
