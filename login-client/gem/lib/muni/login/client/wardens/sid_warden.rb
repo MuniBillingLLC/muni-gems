@@ -8,9 +8,9 @@ module Muni
             idkeep.set_property(:sid_token, sid_token)
             idkeep.set_property(:decoded_token, decoded_token)
             authenticate_sid_token!
-            secure_session = dal.find_secure_identity_by_sid(decoded_token[:sub])
-            validate_identity!(secure_session)
-            accept_identity(secure_session)
+            secure_identity = dal.find_secure_identity_by_sid(decoded_token[:sub])
+            validate_identity!(secure_identity)
+            accept_identity(secure_identity)
           end
 
           private
