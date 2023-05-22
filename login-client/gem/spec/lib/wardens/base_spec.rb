@@ -40,12 +40,8 @@ RSpec.describe Muni::Login::Client::Wardens::Base do
     context "Invalid model" do
       let(:secure_identity) { FactoryBot.create(:secure_identity) }
       it do
-        expect {
-          subj.send(:get_validator, secure_identity)
-        }.to raise_error(Muni::Login::Client::Errors::MalformedIdentity) { |error|
-          expect(error.http_status).to eq(500)
-          expect(error.detail).to eq("Invalid model")
-        }
+        expect(subj.send(:get_validator, secure_identity))
+          .to be_a(Muni::Login::Client::SidValidator)
       end
     end
 
@@ -53,7 +49,7 @@ RSpec.describe Muni::Login::Client::Wardens::Base do
       let(:secure_identity) { FactoryBot.create(:secure_identity, mod_name: User.to_s) }
       it do
         expect(subj.send(:get_validator, secure_identity))
-          .to be_a(Muni::Login::Client::Validators::ReferenceValidator)
+          .to be_a(Muni::Login::Client::SidValidator)
       end
     end
 
@@ -61,7 +57,7 @@ RSpec.describe Muni::Login::Client::Wardens::Base do
       let(:secure_identity) { FactoryBot.create(:secure_identity, mod_name: ApiUser.to_s) }
       it do
         expect(subj.send(:get_validator, secure_identity))
-          .to be_a(Muni::Login::Client::Validators::SidValidator)
+          .to be_a(Muni::Login::Client::SidValidator)
       end
     end
   end

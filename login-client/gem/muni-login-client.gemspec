@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = "muni-login-client"
-  s.version     = "0.0.2"
+  s.version     = "0.0.3"
   s.summary     = "Muni Login Client"
   s.description = "Muni Login Client"
   s.authors     = ["Muni Billing"]
@@ -33,10 +33,6 @@ Gem::Specification.new do |s|
     "lib/muni/login/client/errors/malformed_identity.rb",
     "lib/muni/login/client/errors/unauthorized.rb",
 
-    "lib/muni/login/client/validators/base.rb",
-    "lib/muni/login/client/validators/sid_validator.rb",
-    "lib/muni/login/client/validators/reference_validator.rb",
-
     "lib/muni/login/client/wardens/base.rb",
     "lib/muni/login/client/wardens/sid_warden.rb",
     "lib/muni/login/client/wardens/vendor_warden.rb",
@@ -53,6 +49,7 @@ Gem::Specification.new do |s|
     "lib/muni/login/client/service_locator.rb",
     "lib/muni/login/client/service_proxy.rb",
     "lib/muni/login/client/sid_creator.rb",
+    "lib/muni/login/client/sid_validator.rb",
     "lib/muni/login/client/tool_box.rb",
     "lib/muni/login/client/uri_group.rb"
   ]

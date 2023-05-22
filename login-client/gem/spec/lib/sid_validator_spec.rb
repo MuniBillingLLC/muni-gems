@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Muni::Login::Client::Validators::SidValidator do
+RSpec.describe Muni::Login::Client::SidValidator do
 
   let(:subj) do
     described_class.new(secure_identity: secure_identity)

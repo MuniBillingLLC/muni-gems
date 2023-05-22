@@ -7,10 +7,6 @@ require 'muni/login/client/errors/forbidden'
 require 'muni/login/client/errors/malformed_identity'
 require 'muni/login/client/errors/unauthorized'
 
-require 'muni/login/client/validators/base'
-require 'muni/login/client/validators/sid_validator'
-require 'muni/login/client/validators/reference_validator'
-
 require 'muni/login/client/wardens/base'
 require 'muni/login/client/wardens/sid_warden'
 require 'muni/login/client/wardens/vendor_warden'
@@ -26,6 +22,7 @@ require 'muni/login/client/jwt_decoder'
 require 'muni/login/client/service_locator'
 require 'muni/login/client/service_proxy'
 require 'muni/login/client/sid_creator'
+require 'muni/login/client/sid_validator'
 require 'muni/login/client/tool_box'
 require 'muni/login/client/uri_group'
 

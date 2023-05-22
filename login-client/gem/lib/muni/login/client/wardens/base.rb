@@ -34,17 +34,8 @@ module Muni
                 detail: "Missing identity")
             end
 
-            case secure_identity.mod_name
-            when User.to_s
-              Muni::Login::Client::Validators::ReferenceValidator
-                .new(secure_identity: secure_identity)
-            when ApiUser.to_s
-              Muni::Login::Client::Validators::SidValidator
-                .new(secure_identity: secure_identity)
-            else
-              raise Muni::Login::Client::Errors::MalformedIdentity.new(
-                detail: "Invalid model")
-            end
+            Muni::Login::Client::SidValidator
+              .new(secure_identity: secure_identity)
           end
 
         end
