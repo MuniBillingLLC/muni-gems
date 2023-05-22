@@ -34,8 +34,15 @@ cp muni-gems/login-client/gem/*.gem muni-core/connect/rails/vendor/gems/
 ```
 
 ### Install the gem
+
 ```
 cd muni-core/connect/rails
 gem install vendor/gems/muni-login-client-0.0.1.gem
 gem list | grep muni
+```
+
+### Remove old gem versions
+
+```
+gem cleanup muni-login-client
 ```
