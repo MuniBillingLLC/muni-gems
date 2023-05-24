@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = "muni-login-client"
-  s.version     = "0.0.3"
+  s.version     = "0.0.4"
   s.summary     = "Muni Login Client"
   s.description = "Muni Login Client"
   s.authors     = ["Muni Billing"]

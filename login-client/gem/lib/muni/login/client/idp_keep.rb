@@ -18,15 +18,27 @@ module Muni
           @properties.clear
         end
 
+        def admin
+          return nil unless secure_identity&.mod_name==Admin.to_s
+
+          dal.find_admin_by_id(secure_identity&.mod_id)
+        end
+
         def user
+          return nil unless secure_identity&.mod_name==User.to_s
+
           dal.find_user_by_id(secure_identity&.mod_id)
         end
 
         def api_user
+          return nil unless secure_identity&.mod_name==ApiUser.to_s
+
           dal.find_api_user_by_id(secure_identity&.mod_id)
         end
 
         def customer
+          return nil unless secure_identity&.mod_name==Customer.to_s
+
           dal.find_customer_by_id(secure_identity&.mod_id)
         end
 

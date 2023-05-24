@@ -7,6 +7,18 @@ module Muni
           @cache = Muni::Login::Client::IdpCache.new
         end
 
+        def find_admin_by_id(admin_id)
+          return nil if admin_id.nil?
+
+          cache_key = make_cache_key(
+            method_name: __method__,
+            admin_id: admin_id)
+
+          @cache.fetch(cache_key: cache_key) do
+            Admin.where(id: admin_id).first
+          end
+        end
+
         def find_user_by_id(user_id)
           return nil if user_id.nil?
 
