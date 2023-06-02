@@ -1,3 +1,16 @@
+# The service locator allows one service to have multiple aliases. For example
+#   myservice.mydomain.com
+# can also be available as
+#   myothername.mydomain.com
+# ... or even ...
+#   myothername.myotherdomain.com
+# This is particularly useful in development where services are on two different networks: the internal
+# docker network and the external host network. Imagine service A depends on service B. Then A
+# can be made aware of all possible addresses of B by setting the url_list config value. E.g. somewhere
+# in A's initializers, you'll have:
+#   config_url_list = "http//b1.somedomain, http//b2.anotherdomain"
+# which will make it possible for A to find B inside on both host and docker networks and use the two
+# interchangeably
 module Muni
   module Login
     module Client
@@ -6,6 +19,7 @@ module Muni
         require "resolv"
 
         # This is a CSV list (of strings), which is set during initialization
+        # if the list is not set, the locator will always return the original URL
         config_accessor :config_url_list
 
         def initialize(json_proxy: Muni::Login::Client::JsonProxy.new)
@@ -13,34 +27,42 @@ module Muni
           @joxy = json_proxy
         end
 
-        def fetch_first_healthy(primary_uri)
-          return primary_uri if redundancy_group.size < 2
-          return primary_uri unless redundancy_group.starts_with?(primary_uri)
-          redundancy_group.members.each do |uri|
+        def fetch_first_healthy(original_url)
+          # original_url is considered healthy if there are no aliases
+          return original_url if service_aliases.size < 2
+
+          # when present, the alias list should always start with the original url
+          # e.g if "b,c" are aliases of "a", then the list must be "a,b,c"
+          return original_url unless service_aliases.starts_with?(original_url)
+
+          # fine, the alias list is matches the original URL and it's not empty
+          service_aliases.members.each do |uri|
             return uri if is_healthy?(uri: uri)
           end
+
           # if none is healthy - try again with "delete_cache: true". This helps auto-recover
           # from system-wide outages where the IDP was down for some time and we cached
           # that state
           idlog.info(
             class: self.class.name,
             method: __method__,
-            redundancy_group: redundancy_group.members,
+            service_aliases: service_aliases.members,
             message: "No healthy endpoints found, attempting no_cache")
-          redundancy_group.members.each do |uri|
+          service_aliases.members.each do |uri|
             return uri if is_healthy?(uri: uri, delete_cache: true)
           end
+
           # there's nothing else we can do
           idlog.info(
             class: self.class.name,
             method: __method__,
-            redundancy_group: redundancy_group.members,
+            service_aliases: service_aliases.members,
             message: "The IDP provider is down")
           nil
         end
 
         # convert the CSV list to a proper array of URI objects
-        def redundancy_group
+        def service_aliases
           @service_uris ||= Muni::Login::Client::UriGroup.parse_csv(self.config_url_list)
         end
 

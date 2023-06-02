@@ -8,7 +8,7 @@ module Muni
           result = { uri: uri }
           elapsed = Benchmark.measure do
             begin
-              response = Net::HTTP.get_response(uri, { 'Accept' => 'text/json' }.merge(headers))
+              response = get_response(uri, { 'Accept' => 'text/json' }.merge(headers))
               result[:code] = response.code.to_i
               result[:size] = response.body.to_s.size
               result[:payload] = parse_json(response.body)
@@ -21,6 +21,13 @@ module Muni
         end
 
         private
+
+        def get_response(uri, headers)
+          req = Net::HTTP::Get.new(uri.request_uri, headers)
+          http = Net::HTTP.new(uri.host, uri.port)
+          http.use_ssl = uri.scheme == 'https'
+          http.request(req)
+        end
 
         def parse_json(json_string)
           Muni::Login::Client::ToolBox.reject_blanks(JSON.parse(json_string))

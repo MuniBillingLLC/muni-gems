@@ -11,9 +11,9 @@ RSpec.describe Muni::Login::Client::ServiceLocator do
     retval
   end
 
-  describe "#redundancy_group" do
+  describe "#service_aliases" do
     context 'default' do
-      let(:result) { described_class.new.redundancy_group }
+      let(:result) { described_class.new.service_aliases }
       it do
         expect(result.size)
           .to eq(2)
@@ -23,7 +23,7 @@ RSpec.describe Muni::Login::Client::ServiceLocator do
     end
 
     context 'custom' do
-      let(:result) { subj.redundancy_group }
+      let(:result) { subj.service_aliases }
       it do
         expect(result.size)
           .to eq(2)

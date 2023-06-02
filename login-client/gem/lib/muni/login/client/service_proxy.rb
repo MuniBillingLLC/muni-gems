@@ -48,7 +48,7 @@ module Muni
 
         delegate :get_json, to: :joxy
 
-        delegate :redundancy_group, :checkpoint_uri, to: :idp_locator
+        delegate :service_aliases, :checkpoint_uri, to: :idp_locator
 
         def validate_idp_response!(sid:, idp_response:)
           if idp_response[:code] != 200
@@ -83,11 +83,11 @@ module Muni
           result = []
           case depth
           when 'small'
-            redundancy_group.members.each_with_index do |uri, index|
+            service_aliases.members.each_with_index do |uri, index|
               result << { index: index, value: checkpoint_uri(base_uri: uri, depth: depth) }
             end
           when 'medium'
-            redundancy_group.members.each_with_index do |uri, index|
+            service_aliases.members.each_with_index do |uri, index|
               result << { index: index, value: checkpoint_uri(base_uri: uri, depth: depth) }
             end
           end
