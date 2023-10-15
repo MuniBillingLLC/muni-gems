@@ -5,8 +5,6 @@ FROM ${BASE_IMAGE}
 ARG HOST_UID=0
 ARG HOST_GID=0
 ARG RUBY_VERSION=2.4.9
-ARG BUNLDER_VERSION=2.3.26
-ARG RAKE_VERSION=13.0.6
 
 # a directory for storing image artifacts. This should be strictly data & logs
 # no executables / source code please
@@ -32,14 +30,6 @@ RUN \
             default-libmysqlclient-dev mysql-client libxslt-dev libxml2-dev \
             sqlite3 libsqlite3-dev tzdata dos2unix iputils-ping
 
-# Install nodejs from nodesource since it has the latest version
-# The nodejs package includes both 'node' and 'npm' binaries.
-# The later is used for installing several other dependencies
-RUN \
-    curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && \
-    apt-get install -y nodejs && \
-    npm install --global yarn
-
 # install RVM for all users
 RUN \
     curl -sSL https://rvm.io/mpapis.asc | gpg --import - && \
@@ -47,43 +37,44 @@ RUN \
     curl -sSL https://get.rvm.io | bash -s stable
 
 
-# install ruby for all users
-# also ugrade to more recent version fo rubygems & install required versions of
-# bundler and rake
+# install ruby for all users & ugrade to a more recent version fo rubygems
 RUN \
     /bin/bash -c "source /etc/profile.d/rvm.sh && \
     rvm pkg install openssl && \
     rvm install ${RUBY_VERSION} --with-openssl-dir=/usr/local/rvm/usr && \
-    gem update --system 3.2.3 --no-document && \
-    gem install bundler -v ${BUNLDER_VERSION} && \
-    gem install rake -v ${RAKE_VERSION}"
+    gem update --system 3.3.26 --no-document"
 
 # bring the source into the container
 COPY gem $APP_ROOT
 
-# create local user/group & take ownership of the source files
-RUN if [ ${HOST_GID} -eq 0 ]; \
-    then \
+# create local user/group
+RUN if [ ${HOST_GID} -eq 0 ]; then \
       # When HOST_GID is not set we do the default user creation
-      echo "Argument HOST_GID not set, using defaults" >> ${META_DIR}/build.log; \
+      echo "Argument HOST_GID not set, using defaults" >> /build.log; \
       useradd --create-home --shell /bin/bash $USER_NAME; \
-      chown --recursive ${USER_NAME}:${USER_NAME} $APP_ROOT; \
     else \
-      # When HOST_GID is set we create an user with specific groupd and user id \
-      # note that if setting HOST_GID, you also need to set HOST_UID
-      echo "Argument HOST_GID=${HOST_GID}" >> ${META_DIR}/build.log; \
+      # When HOST_GID is set we create an user with specific group and user id \
+      # note that when setting HOST_GID, you also must set HOST_UID
+      echo "Argument HOST_GID=${HOST_GID}; HOST_UID=${HOST_UID}" >> /build.log; \
       export CONTAINER_GROUPNAME=$(cat /etc/group | grep ":$HOST_GID:" | cut -d ":" -f 1) && \
-      if [ -z "$CONTAINER_GROUPNAME" ]; \
-        then groupadd --gid ${HOST_GID} $USER_NAME; \
+      if [ -z "$CONTAINER_GROUPNAME" ]; then \
+        # when such group does not exist inside the container - create it \
+        # technically, we should be doing the same thing for the HOST_UID, but it has been  \
+        # observed that HOST_UID is always above 1000 and never collides with existing \
+        # container users \
+        echo "gid $HOST_GID not found, creating anew ..." >> /build.log; \
+        groupadd --gid ${HOST_GID} $USER_NAME; \
+      else \
+        echo "gid $HOST_GID already present, it will be reused ..." >> /build.log; \
       fi; \
       useradd --create-home --no-user-group --shell /bin/bash --gid ${HOST_GID} --uid ${HOST_UID} $USER_NAME; \
-      chown --changes --silent --no-dereference --recursive ${HOST_UID}:${HOST_GID} $APP_ROOT; \
+      echo "created $(id $USER_NAME)" >> /build.log; \
     fi
 
 # add user to the RVM group
 RUN usermod -a -G rvm $USER_NAME
 
-# switch to the newly created user
+# switch to newly created user
 USER $USER_NAME
 
 # Install the dependencies
