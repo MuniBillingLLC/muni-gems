@@ -53,12 +53,12 @@ RSpec.describe Muni::Login::Client::DataAccessLayer do
     end
   end
 
-  describe "#find_api_user_by_secret_token" do
+  describe "#find_api_user_by_api_key" do
     let(:api_user) { FactoryBot.create(:api_user) }
     it do
-      expect(subj.find_api_user_by_secret_token(api_user.api_key))
+      expect(subj.find_api_user_by_api_key(api_user.api_key))
         .to eq(api_user)
-      expect(subj.find_api_user_by_secret_token(random_hex_string))
+      expect(subj.find_api_user_by_api_key(random_hex_string))
         .to be_nil
     end
   end

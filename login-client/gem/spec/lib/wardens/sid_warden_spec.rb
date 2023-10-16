@@ -3,18 +3,10 @@ require 'spec_helper'
 RSpec.describe Muni::Login::Client::Wardens::SidWarden do
 
   include_examples '~: sid_tokens'
+  include_examples '~: wardens'
 
   let(:idrequest) do
     instance_double(Muni::Login::Client::IdpRequest, sid_token: known_token)
-  end
-  let(:idkeep) { Muni::Login::Client::IdpKeep.new }
-
-  let(:subj) do
-    described_class.new(idrequest: idrequest, idkeep: idkeep)
-  end
-
-  before do
-    Muni::Login::Client::IdpCache.new.clear
   end
 
   describe "#authenticate_sid_token!" do

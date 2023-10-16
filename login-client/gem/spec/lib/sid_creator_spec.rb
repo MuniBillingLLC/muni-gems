@@ -8,15 +8,15 @@ RSpec.describe Muni::Login::Client::SidCreator do
     Muni::Login::Client::IdpCache.new.clear
   end
 
-  describe "#from_secret_token!" do
+  describe "#from_api_key" do
     let(:api_user) { FactoryBot.create(:api_user) }
 
     context "authorized" do
       it do
         expect {
-          subj.from_secret_token!(
+          subj.from_api_key(
             realm: api_user.class.name,
-            secret_token: api_user.api_key)
+            api_key: api_user.api_key)
         }.to change(SecureIdentity, :count).by(1)
       end
     end
@@ -24,21 +24,21 @@ RSpec.describe Muni::Login::Client::SidCreator do
     context "unauthorized" do
       it 'Invalid api key' do
         expect {
-          subj.from_secret_token!(
+          subj.from_api_key(
             realm: api_user.class.name,
-            secret_token: random_hex_string)
+            api_key: random_hex_string)
         }.to raise_error(Muni::Login::Client::Errors::Unauthorized) { |error|
           expect(error.http_status).to eq(401)
           expect(error.title).to eq('Unauthorized')
-          expect(error.detail).to eq('Invalid api key')
+          expect(error.detail).to eq('Invalid api_key')
         }
       end
 
       it 'Invalid realm' do
         expect {
-          subj.from_secret_token!(
+          subj.from_api_key(
             realm: random_hex_string,
-            secret_token: api_user.api_key)
+            api_key: api_user.api_key)
         }.to raise_error(Muni::Login::Client::Errors::Unauthorized) { |error|
           expect(error.http_status).to eq(401)
           expect(error.title).to eq('Unauthorized')

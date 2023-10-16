@@ -11,14 +11,14 @@ module Muni
     module Client
       class SidCreator < Muni::Login::Client::Base
 
-        def from_secret_token!(realm:, secret_token:)
+        def from_api_key(realm:, api_key:)
           unless [ApiUser.to_s].include?(realm)
             raise Muni::Login::Client::Errors::Unauthorized.new(detail: "Invalid realm")
           end
 
-          api_user = dal.find_api_user_by_secret_token(secret_token)
+          api_user = dal.find_api_user_by_api_key(api_key)
 
-          raise Muni::Login::Client::Errors::Unauthorized.new(detail: "Invalid api key") if api_user.nil?
+          raise Muni::Login::Client::Errors::Unauthorized.new(detail: "Invalid api_key") if api_user.nil?
 
           find_or_create_secure_identity(mod_name: api_user.class.name, mod_id: api_user.id)
         end

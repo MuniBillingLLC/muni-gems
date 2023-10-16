@@ -25,5 +25,6 @@ require 'muni/login/client/sid_creator'
 require 'muni/login/client/sid_validator'
 require 'muni/login/client/tool_box'
 require 'muni/login/client/uri_group'
+require 'muni/login/client/vendor_creator'
 
 

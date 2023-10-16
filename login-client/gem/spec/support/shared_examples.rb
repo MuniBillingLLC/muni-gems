@@ -12,3 +12,15 @@ RSpec.shared_examples '~: sid_tokens' do
   end
 
 end
+
+RSpec.shared_examples '~: wardens' do
+  let(:idkeep) { Muni::Login::Client::IdpKeep.new }
+
+  let(:subj) do
+    described_class.new(idrequest: idrequest, idkeep: idkeep)
+  end
+
+  before do
+    Muni::Login::Client::IdpCache.new.clear
+  end
+end

@@ -68,15 +68,15 @@ module Muni
           end
         end
 
-        def find_api_user_by_secret_token(secret_token)
-          return nil if secret_token.nil?
+        def find_api_user_by_api_key(api_key)
+          return nil if api_key.nil?
 
           cache_key = make_cache_key(
             method_name: __method__,
-            api_key_sha2: Digest::SHA2.hexdigest(secret_token))
+            api_key_sha2: Digest::SHA2.hexdigest(api_key))
 
           @cache.fetch(cache_key: cache_key) do
-            ApiUser.where(api_key: secret_token).first
+            ApiUser.where(api_key: api_key).first
           end
         end
 
