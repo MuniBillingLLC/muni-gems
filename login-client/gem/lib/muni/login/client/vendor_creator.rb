@@ -20,7 +20,7 @@ module Muni
               name: name,
               email: email
             })
-          ApiUser.find_or_create_by(api_key: api_key) do |api_user|
+          ::ApiUser.find_or_create_by(api_key: api_key) do |api_user|
             api_user.name = name
             api_user.email = email
           end
