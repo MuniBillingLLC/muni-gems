@@ -21,7 +21,11 @@ module Muni
           private
 
           def validate_token!
-            if api_secret.blank?
+            if api_token.blank?
+              raise Muni::Login::Client::Errors::Unauthorized.new(detail: "Invalid api_token; Expecting 'api_key:api_secret'")
+            elsif api_key.blank?
+              raise Muni::Login::Client::Errors::Unauthorized.new(detail: "Invalid api_key")
+            elsif api_secret.blank?
               idlog.warn(
                 class: self.class.name,
                 method: __method__,
@@ -51,7 +55,7 @@ module Muni
           end
 
           def api_token
-            idrequest.api_token
+            idrequest.api_token.to_s
           end
 
           def api_key
