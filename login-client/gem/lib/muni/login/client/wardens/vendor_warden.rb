@@ -5,10 +5,6 @@ module Muni
         class VendorWarden < Base
           include ::ActiveSupport::Configurable
 
-          # The secure token format requires API tokens be made of two parts: "[api_key]:[api_secret]". Example:
-          #     "DOKSS234957DKR:943HRWELRHERQWE"
-          # [api_key] is matched against billing database
-          # [api_secret] is matched against runtime configuration
           config_accessor :config_api_secret
 
           def authorize!
@@ -48,12 +44,10 @@ module Muni
                 api_key: api_key)
           end
 
-          def raise_if_locked(api_user)
-            raise Muni::Login::Client::Errors::Forbidden.new(
-              error_code: Muni::Login::Client::Errors::Base::ERC_FORBIDDEN_LOCKED
-            ) if api_user.locked_at.present?
-          end
-
+          # The secure token format requires API tokens be made of two parts: "[api_key]:[api_secret]". Example:
+          #     "DOKSS234957DKR:943HRWELRHERQWE"
+          # [api_key] is matched against billing database
+          # [api_secret] is usually set from environment variable during rails initialization
           def api_token
             idrequest.api_token.to_s
           end
