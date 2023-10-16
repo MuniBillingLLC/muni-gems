@@ -52,6 +52,8 @@ RUN if [ ${HOST_GID} -eq 0 ]; then \
       # When HOST_GID is not set we do the default user creation
       echo "Argument HOST_GID not set, using defaults" >> /build.log; \
       useradd --create-home --shell /bin/bash $USER_NAME; \
+      # Take ownership of the copied files
+      chown --recursive ${USER_NAME}:${USER_NAME} $APP_ROOT; \
     else \
       # When HOST_GID is set we create an user with specific group and user id \
       # note that when setting HOST_GID, you also must set HOST_UID
@@ -68,6 +70,8 @@ RUN if [ ${HOST_GID} -eq 0 ]; then \
         echo "gid $HOST_GID already present, it will be reused ..." >> /build.log; \
       fi; \
       useradd --create-home --no-user-group --shell /bin/bash --gid ${HOST_GID} --uid ${HOST_UID} $USER_NAME; \
+      # Take ownership of the copied files
+      chown --changes --silent --no-dereference --recursive ${HOST_UID}:${HOST_GID} $APP_ROOT; \
       echo "created $(id $USER_NAME)" >> /build.log; \
     fi
 

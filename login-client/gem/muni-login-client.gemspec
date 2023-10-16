@@ -22,6 +22,10 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'factory_bot_rails', '>= 5.2.0'
   s.add_development_dependency 'nokogiri', '>= 1.10.10'
 
+  # added this to work around "uninitialized constant Nokogiri::HTML4"
+  # per https://www.ruby-forum.com/t/i-am-using-ruby-version-2-3-8-and-rails-version-5-2-6-to-develop-my-application-since-yesterday-i-am-getting-the-error-i-tried-to-find-the-occurrence-of-this-nokogiri-html4-in-my-application-but-i-didnt-find-any-of-the-occurrence-like-this/263852
+  s.add_development_dependency 'loofah', '~>2.19.1'
+
   s.files = [
     "LICENSE",
     "README.md",
