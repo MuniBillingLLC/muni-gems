@@ -11,57 +11,38 @@ RSpec.describe Muni::Login::Client::Wardens::VendorWarden do
     instance_double(Muni::Login::Client::IdpRequest, api_token: api_token)
   end
 
-  describe "#validate_token!" do
-    let(:api_secret) { random_hex_string }
-    context 'configured' do
-      before do
-        described_class.config_api_secret = api_secret
-      end
-      context 'plain' do
-        let(:api_token) { random_hex_string }
-        it do
-          subj.send(:validate_token!)
-        end
-      end
-      context 'composite' do
-        context 'valid' do
-          let(:api_token) { [random_hex_string, api_secret].join(':') }
-          it do
-            subj.send(:validate_token!)
-          end
-        end
-        context 'invalid' do
-          let(:api_token) { [random_hex_string, random_hex_string].join(':') }
-          it do
-            expect {
-              subj.send(:validate_token!)
-            }.to raise_error(Muni::Login::Client::Errors::Unauthorized) { |error|
-              expect(error.http_status).to eq(401)
-              expect(error.title).to eq('Unauthorized')
-              expect(error.detail).to eq("Invalid api_secret")
-            }
-          end
-        end
-      end
+  describe "#validate_identity!" do
+    let(:api_token) { "foo:bar" }
+    let(:secure_identity) { FactoryBot.build(:secure_identity) }
+
+    it 'pass' do
+      expect_any_instance_of(Muni::Login::Client::VendorSecretValidator)
+        .to receive(:is_valid?)
+              .with(secure_identity: secure_identity,
+                    api_secret: 'bar')
+              .once
+              .and_return(true)
+
+      expect(subj.send(:validate_identity!, secure_identity))
+        .to be_nil
     end
 
-    context 'unconfigured' do
-      before do
-        described_class.config_api_secret = nil
-      end
-      context 'plain' do
-        let(:api_token) { random_hex_string }
-        it do
-          subj.send(:validate_token!)
-        end
-      end
-      context 'composite' do
-        let(:api_token) { [random_hex_string, random_hex_string].join(':') }
-        it do
-          subj.send(:validate_token!)
-        end
-      end
+    it 'fail' do
+      allow_any_instance_of(Muni::Login::Client::VendorSecretValidator)
+        .to receive(:is_valid?)
+              .with(secure_identity: secure_identity,
+                    api_secret: 'bar')
+              .and_return(false)
+
+      expect {
+        subj.send(:validate_identity!, secure_identity)
+      }.to raise_error(Muni::Login::Client::Errors::Unauthorized) { |error|
+        expect(error.http_status).to eq(401)
+        expect(error.error_code).to eq(1101)
+        expect(error.detail).to eq("invalid api_secret")
+      }
     end
+
   end
 
   describe "#api_token" do

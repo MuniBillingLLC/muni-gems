@@ -4,14 +4,14 @@ module Muni
     module Client
       class VendorCreator < Muni::Login::Client::Base
 
-        def create_from_json(json_string)
+        def provision_from_json(json_string)
           json = JSON.parse(json_string, symbolize_names: true)
-          create(api_key: json[:api_key],
-                 name: json[:name],
-                 email: json[:email])
+          provision(api_key: json[:api_key],
+                    name: json[:name],
+                    email: json[:email])
         end
 
-        def create(api_key:, name:, email:)
+        def provision(api_key:, name:, email:)
           idlog.warn(
             class: self.class.name,
             method: __method__,

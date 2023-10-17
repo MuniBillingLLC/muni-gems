@@ -8,13 +8,14 @@ class TheSchema < ActiveRecord::Migration[5.2]
       t.string  :name
       t.string  :email
       t.string  :api_key
+      t.datetime :locked_at
       t.timestamps
     end
 
     create_table :users do |t|
       t.string  :name
       t.string  :email
-      t.boolean :locked_at
+      t.datetime :locked_at
       t.timestamps
     end
 
@@ -22,7 +23,7 @@ class TheSchema < ActiveRecord::Migration[5.2]
       t.string  :first_name
       t.string  :last_name
       t.string  :email
-      t.boolean :locked_at
+      t.datetime :locked_at
       t.timestamps
     end
 
@@ -30,7 +31,7 @@ class TheSchema < ActiveRecord::Migration[5.2]
       t.string  :sid
       t.string  :mod_name
       t.integer :mod_id
-      t.boolean :locked_at
+      t.datetime :locked_at
       t.timestamps
     end
   end

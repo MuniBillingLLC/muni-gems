@@ -103,6 +103,62 @@ RSpec.describe Muni::Login::Client::IdpKeep do
     end
   end
 
+  describe "#system_api_user" do
+    before do
+      ApiUser.delete_all
+    end
+
+    context 'none' do
+      it do
+        expect(subj.send(:system_api_user))
+          .to be_nil
+      end
+    end
+
+    context 'first' do
+      it do
+        api_user = FactoryBot.create(:api_user)
+        expect(subj.send(:system_api_user))
+          .to eq(api_user)
+      end
+    end
+
+    context 'by name' do
+      it do
+        FactoryBot.create(:api_user)
+        api_user = FactoryBot.create(:api_user, api_key: 'SYSTEM_XXX')
+        expect(subj.send(:system_api_user))
+          .to eq(api_user)
+      end
+    end
+
+    context 'by name not matching' do
+      it do
+        api_user = FactoryBot.create(:api_user)
+        FactoryBot.create(:api_user, api_key: 'NOT_SYSTEM_XXX')
+        expect(subj.send(:system_api_user))
+          .to eq(api_user)
+      end
+    end
+  end
+
+  describe "#system_api_token" do
+    let(:api_user) {  FactoryBot.create(:api_user, api_key: 'my_key') }
+    it do
+      allow_any_instance_of(Muni::Login::Client::VendorSecretValidator)
+        .to receive(:system_api_secret)
+              .and_return("my_secret")
+
+      allow_any_instance_of(described_class)
+        .to receive(:system_api_user)
+              .and_return(api_user)
+
+      expect(subj.system_api_token)
+        .to eq("my_key:my_secret")
+    end
+  end
+
+
 end
 
 
