@@ -5,7 +5,6 @@ module Muni
         class VendorWarden < Base
 
           def authorize!
-            validate_token!
             secure_identity = create_identity!
             validate_identity!(secure_identity)
             accept_identity(secure_identity)

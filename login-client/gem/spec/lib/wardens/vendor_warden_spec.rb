@@ -11,6 +11,30 @@ RSpec.describe Muni::Login::Client::Wardens::VendorWarden do
     instance_double(Muni::Login::Client::IdpRequest, api_token: api_token)
   end
 
+  describe "#authorize!" do
+    let(:api_token) { random_hex_string }
+    let(:secure_identity) { random_hex_string }
+
+    it do
+      expect(subj)
+        .to receive(:create_identity!)
+              .once
+              .and_return(secure_identity)
+
+      expect(subj)
+        .to receive(:validate_identity!)
+              .with(secure_identity)
+              .once
+
+      expect(subj)
+        .to receive(:accept_identity)
+              .with(secure_identity)
+              .once
+
+      subj.authorize!
+    end
+  end
+
   describe "#validate_identity!" do
     let(:api_token) { "foo:bar" }
     let(:secure_identity) { FactoryBot.build(:secure_identity) }
