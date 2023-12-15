@@ -18,8 +18,7 @@ module Muni
             idkeep.sid = secure_identity.sid
 
             idlog.debug(
-              class: self.class.name,
-              method: __method__,
+              location: "#{self.class.name}.#{__method__}",
               message: "Authorized",
               secure_identity: log_attributes(secure_identity))
           end

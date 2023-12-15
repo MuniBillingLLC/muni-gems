@@ -9,8 +9,7 @@ module Muni
         def delete(cache_key:)
           decorated_key = decorated(cache_key)
           message = {
-            class: self.class.name,
-            method: __method__,
+            location: "#{self.class.name}.#{__method__}",
             cache_key: {
               original: cache_key,
               decorated: decorated_key

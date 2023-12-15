@@ -10,8 +10,7 @@ module Muni
         def is_valid?(secure_identity:, api_secret:)
           if secure_identity.nil?
             idlog.warn(
-              class: self.class.name,
-              method: __method__,
+              location: "#{self.class.name}.#{__method__}",
               message: "secure_identity not provided")
             return false
           end
@@ -20,8 +19,7 @@ module Muni
           # this will be disabled as soon as we fully adopt secure tokens
           if api_secret.blank?
             idlog.warn(
-              class: self.class.name,
-              method: __method__,
+              location: "#{self.class.name}.#{__method__}",
               message: "api_secret not provided; please switch to secure token format")
             return true
           end

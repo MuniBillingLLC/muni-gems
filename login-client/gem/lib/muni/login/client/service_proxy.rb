@@ -20,23 +20,20 @@ module Muni
         def authenticate_sid_token!(sid_token:, sid:, issuer_url:)
           idp_uri = fetch_first_healthy(issuer_url: issuer_url)
           idlog.debug(
-            class: self.class.name,
-            method: __method__,
+            location: "#{self.class.name}.#{__method__}",
             issuer_url: issuer_url,
             idp_uri: idp_uri,
             message: "Resolved")
 
           idp_response = get_idp_response(sid_token: sid_token, idp_uri: idp_uri)
           idlog.debug(
-            class: self.class.name,
-            method: __method__,
+            location: "#{self.class.name}.#{__method__}",
             idp_response: idp_response.except(:payload),
             message: "Received")
 
           validate_idp_response!(sid: sid, idp_response: idp_response)
           idlog.debug(
-            class: self.class.name,
-            method: __method__,
+            location: "#{self.class.name}.#{__method__}",
             sid: sid,
             idp_uri: idp_uri,
             message: "Authenticated")

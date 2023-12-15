@@ -13,8 +13,7 @@ module Muni
 
         def provision(api_key:, name:, email:)
           idlog.warn(
-            class: self.class.name,
-            method: __method__,
+            location: "#{self.class.name}.#{__method__}",
             message: {
               api_key: "****",
               name: name,

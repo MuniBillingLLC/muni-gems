@@ -44,8 +44,7 @@ module Muni
           # from system-wide outages where the IDP was down for some time and we cached
           # that state
           idlog.info(
-            class: self.class.name,
-            method: __method__,
+            location: "#{self.class.name}.#{__method__}",
             service_aliases: service_aliases.members,
             message: "No healthy endpoints found, attempting no_cache")
           service_aliases.members.each do |uri|
@@ -54,8 +53,7 @@ module Muni
 
           # there's nothing else we can do
           idlog.info(
-            class: self.class.name,
-            method: __method__,
+            location: "#{self.class.name}.#{__method__}",
             service_aliases: service_aliases.members,
             message: "The IDP provider is down")
           nil
@@ -97,15 +95,13 @@ module Muni
 
               if response[:code] != 200
                 idlog.warn(
-                  class: self.class.name,
-                  method: __method__,
+                  location: "#{self.class.name}.#{__method__}",
                   response: response)
               end
               response
             rescue StandardError => e
               idlog.warn(
-                class: self.class.name,
-                method: __method__,
+                location: "#{self.class.name}.#{__method__}",
                 healthcheck_uri: healthcheck_uri,
                 exception: {
                   class: e.class.name,

@@ -26,8 +26,7 @@ module Muni
             Muni::Login::Client::JwtDecoder.new(sid_token).jwt_decode
           rescue StandardError => e
             idlog.info(
-              class: self.class.name,
-              method: __method__,
+              location: "#{self.class.name}.#{__method__}",
               sid_token: sid_token,
               message: e.message)
             raise Muni::Login::Client::Errors::MalformedIdentity.new(detail: "Invalid token")

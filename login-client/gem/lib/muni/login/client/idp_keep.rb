@@ -11,8 +11,7 @@ module Muni
 
         def clear
           idlog.info(
-            class: self.class.name,
-            method: __method__,
+            location: "#{self.class.name}.#{__method__}",
             sid: sid)
 
           @properties.clear
