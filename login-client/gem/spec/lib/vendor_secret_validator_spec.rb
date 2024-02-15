@@ -6,6 +6,7 @@ RSpec.describe Muni::Login::Client::VendorSecretValidator do
 
   before do
     described_class.config_csv_secrets = csv_secrets
+    allow(subj).to receive(:evar_csv_secrets).and_return(nil)
   end
 
   describe "#all_secrets" do
@@ -13,8 +14,12 @@ RSpec.describe Muni::Login::Client::VendorSecretValidator do
     context "nil" do
       let(:csv_secrets) { nil }
       it do
-        expect(subj.send(:all_secrets)).to be_a(Array)
-        expect(subj.send(:all_secrets)).to be_empty
+        expect {
+          subj.send(:all_secrets)
+        }.to raise_error(Muni::Login::Client::Errors::BadConfiguration) { |error|
+          expect(error.http_status).to eq(500)
+          expect(error.detail).to eq("Please set 'config_csv_secrets' to enable secure API tokens")
+        }
       end
     end
 
@@ -66,7 +71,7 @@ RSpec.describe Muni::Login::Client::VendorSecretValidator do
     let(:csv_secrets) { 'dog,fox,donkey' }
     it 'true' do
       expect(subj.is_valid?(secure_identity: secure_identity, api_secret: nil))
-        .to eq(true)
+        .to eq(false)
       expect(subj.is_valid?(secure_identity: secure_identity, api_secret: 'dog'))
         .to eq(true)
       expect(subj.is_valid?(secure_identity: secure_identity, api_secret: 'fox'))

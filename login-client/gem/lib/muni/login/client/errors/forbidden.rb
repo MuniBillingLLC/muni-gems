@@ -1,10 +1,4 @@
-# 502 Bad Gateway
-# This error is usually due to improperly configured proxy servers. However, the problem may
-# also arise when there is poor IP communication between back—end computers, when the client's
-# server is overloaded, or when a firewall is functioning improperly.
-#
-# The first step in resolving the issue is to clear the client's cache. This action should result
-# in a different proxy being used to resolve the web server's content.
+# 403 Forbidden
 module Muni
   module Login
     module Client

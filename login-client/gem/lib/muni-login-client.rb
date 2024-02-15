@@ -3,6 +3,7 @@ require 'muni/login/client/base'
 
 require 'muni/login/client/errors/base'
 require 'muni/login/client/errors/bad_gateway'
+require 'muni/login/client/errors/bad_configuration'
 require 'muni/login/client/errors/forbidden'
 require 'muni/login/client/errors/malformed_identity'
 require 'muni/login/client/errors/unauthorized'
