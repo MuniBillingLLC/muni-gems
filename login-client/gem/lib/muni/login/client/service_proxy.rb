@@ -9,8 +9,11 @@ module Muni
           @idp_locator = Muni::Login::Client::ServiceLocator.new(json_proxy: @joxy)
         end
 
-        def check_status(depth:)
+        # Use this method to check the status of the login service
+        def check_status(depth: 'small')
           result = []
+          # because of service aliasing, we may have multiple checkpoints
+          # per service. Here we check them all
           checkpoints(depth: depth).each do |cp|
             result << { cp[:index] => get_json(uri: cp[:value]) }
           end
