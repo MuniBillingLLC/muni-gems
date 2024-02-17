@@ -20,13 +20,19 @@ module Muni
 
         def sid_token
           @sid_token ||= if sid_token_from_cookies.present?
-                           idlog.debug(location: "#{self.class.name}.#{__method__}",
+                           idlog.trace(location: "#{self.class.name}.#{__method__}",
+                                       message: 'sid_token_from_cookies',
                                        cookie_name: @cookie_reader.sid_cookie_name)
                            sid_token_from_cookies
                          elsif sid_token_from_headers.present?
-                           idlog.debug(location: "#{self.class.name}.#{__method__}",
+                           idlog.trace(location: "#{self.class.name}.#{__method__}",
+                                       message: 'sid_token_from_headers',
                                        header_name: AUTHORIZATION_HEADER)
                            sid_token_from_headers
+                         else
+                           idlog.trace(location: "#{self.class.name}.#{__method__}",
+                                       message: 'sid_token not present')
+                           nil
                          end
         end
 
