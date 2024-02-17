@@ -12,6 +12,11 @@ module Muni
           @action_name = action_name
           @cookie_reader = cookie_reader
           @http_headers = http_headers
+
+          idlog.trace(location: "#{self.class.name}.#{__method__}",
+                      controller_path: controller_path,
+                      action_name: action_name,
+                      http_headers: http_headers)
         end
 
         def api_token
