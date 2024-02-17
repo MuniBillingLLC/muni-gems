@@ -1,3 +1,5 @@
+# Example:
+#   Muni::Login::Client::JsonProxy.new.get_json(uri: 'https://login.staging.munibilling.com/api/checkpoints/small')
 module Muni
   module Login
     module Client
@@ -5,10 +7,10 @@ module Muni
         require 'net/http'
 
         def get_json(uri:, headers: {})
-          result = { uri: uri }
+          result = { uri: to_uri(uri).to_s }
           elapsed = Benchmark.measure do
             begin
-              response = get_response(uri, { 'Accept' => 'text/json' }.merge(headers))
+              response = get_response(to_uri(uri), { 'Accept' => 'text/json' }.merge(headers))
               result[:code] = response.code.to_i
               result[:size] = response.body.to_s.size
               result[:payload] = parse_json(response.body)
@@ -21,6 +23,14 @@ module Muni
         end
 
         private
+
+        def to_uri(value)
+          if value.is_a?(String)
+            URI.parse(value)
+          else
+            value
+          end
+        end
 
         def get_response(uri, headers)
           Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
