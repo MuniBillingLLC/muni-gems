@@ -15,6 +15,12 @@ module Muni
           def validate_identity!(secure_identity)
             super(secure_identity)
             unless vsv.is_valid?(secure_identity: secure_identity, api_secret: api_secret)
+
+              idlog.trace(
+                location: "#{self.class.name}.#{__method__}",
+                api_secret: api_secret,
+                secure_identity: sid_attributes(secure_identity))
+
               raise Muni::Login::Client::Errors::Unauthorized.new(
                 detail: "invalid api_secret")
             end

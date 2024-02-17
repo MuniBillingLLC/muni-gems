@@ -23,10 +23,9 @@ module Muni
         private
 
         def get_response(uri, headers)
-          req = Net::HTTP::Get.new(uri.request_uri, headers)
-          http = Net::HTTP.new(uri.host, uri.port)
-          http.use_ssl = uri.scheme == 'https'
-          http.request(req)
+          Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
+            http.request(Net::HTTP::Get.new(uri.request_uri, headers))
+          end
         end
 
         def parse_json(json_string)

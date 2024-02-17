@@ -20,7 +20,7 @@ module Muni
             idlog.debug(
               location: "#{self.class.name}.#{__method__}",
               message: "Authorized",
-              secure_identity: log_attributes(secure_identity))
+              secure_identity: sid_attributes(secure_identity))
           end
 
           def validate_identity!(secure_identity)
@@ -37,7 +37,7 @@ module Muni
               .new(secure_identity: secure_identity)
           end
 
-          def log_attributes(secure_identity)
+          def sid_attributes(secure_identity)
             secure_identity
               .attributes
               .with_indifferent_access

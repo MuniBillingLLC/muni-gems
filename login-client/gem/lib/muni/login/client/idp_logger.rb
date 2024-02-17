@@ -28,6 +28,13 @@ module Muni
           @rails_logger.error decorate(message)
         end
 
+        # use this method to dump all kinds of information for troubleshooting
+        # never enable this in prod, since traces may contain privileged
+        # information
+        def trace(message)
+          info("***TRACE: #{message}") if ENV['MUNIDEV_IDPLOG_TRACE'].present?
+        end
+
         private
 
         def decorate(message)
