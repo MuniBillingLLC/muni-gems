@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = "muni-login-client"
-  s.version     = "0.0.18" # keep in sync with "lib/muni/login/client/idp_logger.rb"
+  s.version     = "0.0.19" # keep in sync with "lib/muni/login/client/idp_logger.rb"
   s.summary     = "Muni Login Client"
   s.description = "Muni Login Client"
   s.authors     = ["Muni Billing"]
@@ -11,6 +11,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency "activesupport", '>= 5.2.8'
   s.add_dependency "activerecord", '>= 5.2.8'
+  s.add_dependency "actionpack", '>= 5.2.8'
   s.add_dependency "jwt", '>= 2.3.0'
 
   s.add_development_dependency 'rails', '>= 5.2.8'

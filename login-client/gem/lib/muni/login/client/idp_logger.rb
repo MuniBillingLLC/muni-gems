@@ -3,7 +3,7 @@ module Muni
   module Login
     module Client
       class IdpLogger
-        MUNI_GEM_VERSION = "0.0.18" # keep in sync with "muni-login-client.gemspec"
+        MUNI_GEM_VERSION = "0.0.19" # keep in sync with "muni-login-client.gemspec"
 
         def initialize
           @rails_logger = Rails.logger
@@ -13,8 +13,13 @@ module Muni
           @idrequest = idrequest
         end
 
-        def debug(message)
-          @rails_logger.debug decorate(message: message, level: "debug")
+        # use this method to dump all kinds of information for troubleshooting
+        # never enable this in prod, since traces may contain privileged
+        # information
+        def trace(message)
+          if ENV['MUNIDEV_IDPLOG_TRACE'].present?
+            @rails_logger.info decorate(message: message, level: "trace")
+          end
         end
 
         def info(message)
@@ -29,14 +34,6 @@ module Muni
           @rails_logger.error decorate(message: message, level: "error")
         end
 
-        # use this method to dump all kinds of information for troubleshooting
-        # never enable this in prod, since traces may contain privileged
-        # information
-        def trace(message)
-          if ENV['MUNIDEV_IDPLOG_TRACE'].present?
-            @rails_logger.info decorate(message: message, level: "trace")
-          end
-        end
 
         private
 

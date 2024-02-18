@@ -10,7 +10,7 @@ module Muni
         end
 
         def clear
-          idlog.info(
+          idlog.trace(
             location: "#{self.class.name}.#{__method__}",
             sid: sid)
 
