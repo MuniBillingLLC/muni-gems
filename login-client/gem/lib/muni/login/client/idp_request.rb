@@ -3,7 +3,7 @@ module Muni
     module Client
       class IdpRequest < Muni::Login::Client::Base
 
-        attr_reader :controller_path, :action_name
+        attr_reader :controller_path, :action_name, :http_headers
 
         def initialize(controller_path:, action_name:, cookie_reader: nil, http_headers: nil)
           super()
@@ -20,7 +20,7 @@ module Muni
         end
 
         def api_token
-          @http_headers.present? ? @http_headers[API_TOKEN_HEADER] : nil
+          http_headers.present? ? http_headers[API_TOKEN_HEADER] : nil
         end
 
         def sid_token
@@ -45,6 +45,17 @@ module Muni
           "#{@controller_path}|#{@action_name}"
         end
 
+        # based on https://stackoverflow.com/questions/32405155/display-or-get-the-http-header-attributes-in-rails-4
+        def http_headers_hash
+          if http_headers.nil?
+            {}
+          elsif http_headers.is_a?(ActionDispatch::Http::Headers)
+            http_headers.env.select { |k, _| k.in?(ActionDispatch::Http::Headers::CGI_VARIABLES) || k =~ /^HTTP_/ }
+          else
+            http_headers
+          end
+        end
+
         private
 
         def sid_token_from_cookies
@@ -52,19 +63,10 @@ module Muni
         end
 
         def sid_token_from_headers
-          @http_headers.present? ? @http_headers[AUTHORIZATION_HEADER].to_s.split(WHSP).last : nil
+          http_headers.present? ? http_headers[AUTHORIZATION_HEADER].to_s.split(WHSP).last : nil
         end
 
-        # based on https://stackoverflow.com/questions/32405155/display-or-get-the-http-header-attributes-in-rails-4
-        def http_headers_hash
-          if @http_headers.nil?
-            {}
-          elsif @http_headers.is_a?(ActionDispatch::Http::Headers)
-            @http_headers.env.select { |k, _| k.in?(ActionDispatch::Http::Headers::CGI_VARIABLES) || k =~ /^HTTP_/ }
-          else
-            @http_headers
-          end
-        end
+
 
       end
     end
