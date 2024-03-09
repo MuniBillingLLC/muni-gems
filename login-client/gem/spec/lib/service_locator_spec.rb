@@ -1,19 +1,21 @@
 require 'spec_helper'
 
 RSpec.describe Muni::Login::Client::ServiceLocator do
+  include_examples '~: commons'
 
   let(:primary_uri) { random_uri }
   let(:alternative_uri) { random_uri }
 
   let(:subj) do
-    retval = described_class.new
+    retval = described_class.new(json_proxy: json_proxy, idlog: idlog)
     retval.config.config_url_list = [primary_uri.to_s, alternative_uri.to_s].join(',')
     retval
   end
 
+
   describe "#service_aliases" do
     context 'default' do
-      let(:result) { described_class.new.service_aliases }
+      let(:result) { described_class.new(json_proxy: json_proxy, idlog: idlog).service_aliases }
       it do
         expect(result.size)
           .to eq(2)

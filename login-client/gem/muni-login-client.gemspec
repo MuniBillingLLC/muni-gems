@@ -1,12 +1,12 @@
 Gem::Specification.new do |s|
-  s.name        = "muni-login-client"
-  s.version     = "0.0.20" # keep in sync with "lib/muni/login/client/idp_logger.rb"
-  s.summary     = "Muni Login Client"
+  s.name = "muni-login-client"
+  s.version = "0.0.21" # keep in sync with "lib/muni/login/client/idp_logger.rb"
+  s.summary = "Muni Login Client"
   s.description = "Muni Login Client"
-  s.authors     = ["Muni Billing"]
-  s.email       = "sales@munibilling.com"
-  s.homepage    = "https://github.com/MuniBillingLLC"
-  s.license     = "Nonstandard"
+  s.authors = ["Muni Billing"]
+  s.email = "sales@munibilling.com"
+  s.homepage = "https://github.com/MuniBillingLLC"
+  s.license = "Nonstandard"
   s.require_paths = ["lib"]
 
   s.add_dependency "activesupport", '>= 5.2.8'
@@ -31,6 +31,9 @@ Gem::Specification.new do |s|
     "LICENSE",
     "README.md",
     "lib/muni-login-client.rb",
+
+    "lib/muni/login/client/concerns/belongs_to_keep.rb",
+    "lib/muni/login/client/concerns/belongs_to_request.rb",
 
     "lib/muni/login/client/errors/base.rb",
     "lib/muni/login/client/errors/bad_gateway.rb",

@@ -1,21 +1,18 @@
 require 'spec_helper'
 
 RSpec.describe Muni::Login::Client::ServiceProxy do
+  include_examples '~: commons'
 
-  let(:subj) { described_class.new }
+  let(:subj) { described_class.new(json_proxy: json_proxy, idlog: idlog) }
 
   let(:issuer_uri) { random_uri }
   let(:sid) { random_hex_string }
 
   describe "#check_status" do
     let(:depth) { ['small', 'medium'].sample }
-    let(:response) { random_hash }
     it do
-      allow_any_instance_of(Muni::Login::Client::JsonProxy)
-        .to receive(:get_json)
-              .and_return(response)
       expect(subj.check_status(depth: depth))
-        .to eq([{ 0 => response }, { 1 => response }])
+        .to eq([{ 0 => json_proxy_response }, { 1 => json_proxy_response }])
     end
   end
 
@@ -100,13 +97,10 @@ RSpec.describe Muni::Login::Client::ServiceProxy do
     let(:sid_token) { random_hex_string }
 
     it do
-      expect_any_instance_of(Muni::Login::Client::JsonProxy)
-        .to receive(:get_json)
       subj.send(:get_idp_response, sid_token: sid_token, idp_uri: idp_uri)
     end
 
   end
-
 
 end
 

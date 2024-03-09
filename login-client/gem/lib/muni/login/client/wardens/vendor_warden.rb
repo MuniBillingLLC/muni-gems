@@ -51,7 +51,7 @@ module Muni
           end
 
           def vsv
-            @vsv ||= Muni::Login::Client::VendorSecretValidator.new
+            @vsv ||= Muni::Login::Client::VendorSecretValidator.new(idkeep: idkeep)
           end
 
         end

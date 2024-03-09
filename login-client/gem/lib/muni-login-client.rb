@@ -1,6 +1,9 @@
 
 require 'muni/login/client/base'
 
+require 'muni/login/client/concerns/belongs_to_keep'
+require 'muni/login/client/concerns/belongs_to_request'
+
 require 'muni/login/client/errors/base'
 require 'muni/login/client/errors/bad_gateway'
 require 'muni/login/client/errors/bad_configuration'

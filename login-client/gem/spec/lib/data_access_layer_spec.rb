@@ -74,7 +74,7 @@ RSpec.describe Muni::Login::Client::DataAccessLayer do
   end
 
   describe "#authenticate_sid_token!" do
-    let(:loxy) { instance_double(Muni::Login::Client::ServiceProxy) }
+    let(:service_proxy) { instance_double(Muni::Login::Client::ServiceProxy) }
     let(:sid_token) { random_hex_string }
     let(:decoded_token) do
       {
@@ -84,7 +84,7 @@ RSpec.describe Muni::Login::Client::DataAccessLayer do
     end
 
     it do
-      expect(loxy)
+      expect(service_proxy)
         .to receive(:authenticate_sid_token!)
               .with(sid_token: sid_token,
                     sid: decoded_token[:sub],
@@ -93,7 +93,7 @@ RSpec.describe Muni::Login::Client::DataAccessLayer do
       subj.authenticate_sid_token!(
         sid_token: sid_token,
         decoded_token: decoded_token,
-        loxy: loxy)
+        service_proxy: service_proxy)
     end
 
   end

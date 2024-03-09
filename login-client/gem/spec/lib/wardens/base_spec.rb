@@ -2,9 +2,8 @@ require 'spec_helper'
 
 RSpec.describe Muni::Login::Client::Wardens::Base do
 
+  include_examples '~: commons'
   include_examples '~: wardens'
-
-  let(:idrequest) { instance_double(Muni::Login::Client::IdpRequest) }
 
   describe "#accept_identity" do
     let(:secure_identity) { FactoryBot.create(:secure_identity) }

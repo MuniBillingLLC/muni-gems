@@ -22,9 +22,9 @@ module Muni
         # if the list is not set, the locator will always return the original URL
         config_accessor :config_url_list
 
-        def initialize(json_proxy: Muni::Login::Client::JsonProxy.new)
-          @idlog = Muni::Login::Client::IdpLogger.new
-          @joxy = json_proxy
+        def initialize(json_proxy:, idlog:)
+          @idlog = idlog
+          @json_proxy = json_proxy
         end
 
         def fetch_first_healthy(original_url)
@@ -70,9 +70,9 @@ module Muni
 
         private
 
-        attr_reader :joxy, :idlog
+        attr_reader :json_proxy, :idlog
 
-        delegate :get_json, to: :joxy
+        delegate :get_json, to: :json_proxy
 
         def is_healthy?(uri:, delete_cache: false)
           fetch_health_response(uri: uri, delete_cache: delete_cache)&.dig(:code) == 200

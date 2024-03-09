@@ -3,10 +3,11 @@ module Muni
     module Client
       class ServiceProxy < Muni::Login::Client::Base
 
-        def initialize
+        def initialize(json_proxy:, idlog:)
           super()
-          @joxy = Muni::Login::Client::JsonProxy.new
-          @idp_locator = Muni::Login::Client::ServiceLocator.new(json_proxy: @joxy)
+          @idlog = idlog
+          @json_proxy = json_proxy
+          @idp_locator = Muni::Login::Client::ServiceLocator.new(json_proxy: json_proxy, idlog: idlog)
         end
 
         # Use this method to check the status of the login service
@@ -44,9 +45,9 @@ module Muni
 
         private
 
-        attr_reader :joxy, :idlog, :idp_locator
+        attr_reader :json_proxy, :idlog, :idp_locator
 
-        delegate :get_json, to: :joxy
+        delegate :get_json, to: :json_proxy
 
         delegate :service_aliases, :checkpoint_uri, to: :idp_locator
 

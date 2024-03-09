@@ -3,16 +3,18 @@ module Muni
     module Client
       module Wardens
         class Base < Muni::Login::Client::Base
+          include Concerns::BelongsToRequest
+
+          attr_reader :idkeep, :idrequest
 
           def initialize(idrequest:, idkeep:)
             super()
             @idrequest = idrequest
             @idkeep = idkeep
+            idkeep.idlog.bind(idrequest: idrequest)
           end
 
           private
-
-          attr_reader :idkeep, :idrequest
 
           def accept_identity(secure_identity)
             idkeep.sid = secure_identity.sid

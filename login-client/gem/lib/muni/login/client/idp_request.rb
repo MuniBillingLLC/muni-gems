@@ -7,7 +7,6 @@ module Muni
 
         def initialize(controller_path:, action_name:, cookie_reader: nil, http_headers: nil)
           super()
-          idlog.bind(idrequest: self)
           @controller_path = controller_path
           @action_name = action_name
           @cookie_reader = cookie_reader
@@ -21,6 +20,10 @@ module Muni
 
         def api_token
           http_headers.present? ? http_headers[API_TOKEN_HEADER] : nil
+        end
+
+        def api_call_id
+          http_headers.present? ? http_headers[API_CALL_ID_HEADER] : nil
         end
 
         def sid_token
@@ -56,6 +59,14 @@ module Muni
           end
         end
 
+        def idlog
+          return @idlog if @idlog.present?
+
+          @idlog = Muni::Login::Client::IdpLogger.new
+          @idlog.bind(idrequest: self)
+          @idlog
+        end
+
         private
 
         def sid_token_from_cookies
@@ -65,8 +76,6 @@ module Muni
         def sid_token_from_headers
           http_headers.present? ? http_headers[AUTHORIZATION_HEADER].to_s.split(WHSP).last : nil
         end
-
-
 
       end
     end

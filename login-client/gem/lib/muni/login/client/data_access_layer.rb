@@ -92,17 +92,17 @@ module Muni
           end
         end
 
-        def authenticate_sid_token!(sid_token:, decoded_token:, loxy:)
+        def authenticate_sid_token!(sid_token:, decoded_token:, service_proxy:)
           return nil if sid_token.nil?
           return nil if decoded_token.nil?
-          return nil if loxy.nil?
+          return nil if service_proxy.nil?
 
           cache_key = make_cache_key(
             method_name: __method__,
             sid_token: sid_token)
 
           @cache.fetch(cache_key: cache_key) do
-            loxy.authenticate_sid_token!(
+            service_proxy.authenticate_sid_token!(
               sid_token: sid_token,
               sid: decoded_token[:sub],
               issuer_url: decoded_token[:iss])

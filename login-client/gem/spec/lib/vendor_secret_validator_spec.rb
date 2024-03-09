@@ -1,8 +1,9 @@
 require 'spec_helper'
 
 RSpec.describe Muni::Login::Client::VendorSecretValidator do
+  include_examples '~: commons'
 
-  let(:subj) { described_class.new }
+  let(:subj) { described_class.new(idkeep: idkeep) }
 
   before do
     described_class.config_csv_secrets = csv_secrets

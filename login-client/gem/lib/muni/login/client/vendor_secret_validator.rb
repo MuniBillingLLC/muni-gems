@@ -4,8 +4,13 @@ module Muni
     module Client
       class VendorSecretValidator < Muni::Login::Client::Base
         include ::ActiveSupport::Configurable
+        include Concerns::BelongsToKeep
 
         config_accessor :config_csv_secrets
+
+        def initialize(idkeep:)
+          @idkeep = idkeep
+        end
 
         def is_valid?(secure_identity:, api_secret:)
           if secure_identity.nil?

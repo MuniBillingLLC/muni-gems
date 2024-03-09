@@ -25,6 +25,12 @@ module Muni
           end
         end
 
+        private
+
+        def idlog
+          @idlog ||= Muni::Login::Client::IdpLogger.new
+        end
+
       end
     end
   end

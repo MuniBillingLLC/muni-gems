@@ -19,7 +19,7 @@ module Muni
             dal.authenticate_sid_token!(
               sid_token: sid_token,
               decoded_token: decoded_token,
-              loxy: loxy)
+              service_proxy: service_proxy)
           end
 
           def decoded_token
@@ -32,12 +32,22 @@ module Muni
             raise Muni::Login::Client::Errors::MalformedIdentity.new(detail: "Invalid token")
           end
 
-          def loxy
-            @loxy ||= Muni::Login::Client::ServiceProxy.new
+          def service_proxy
+            @service_proxy ||= Muni::Login::Client::ServiceProxy.new(json_proxy: json_proxy, idlog: idlog)
+          end
+
+          def json_proxy
+            @json_proxy ||= Muni::Login::Client::JsonProxy.new(base_headers: base_headers)
           end
 
           def sid_token
             idrequest.sid_token
+          end
+
+          def base_headers
+            {
+              "#{API_CALL_ID_HEADER_RFC_7230}" => idrequest.api_call_id
+            }
           end
 
         end

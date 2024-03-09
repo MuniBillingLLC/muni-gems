@@ -73,6 +73,10 @@ module Muni
           @properties[:decoded_token]
         end
 
+        def idlog
+          @idlog ||= Muni::Login::Client::IdpLogger.new
+        end
+
         private
 
         # a special purpose API user, for communicating between our own services
@@ -81,7 +85,7 @@ module Muni
         end
 
         def vsv
-          @vsv ||= Muni::Login::Client::VendorSecretValidator.new
+          @vsv ||= Muni::Login::Client::VendorSecretValidator.new(idkeep: self)
         end
 
       end

@@ -6,14 +6,15 @@ module Muni
         WHSP = 32.chr
         DOT_WHSP = ".#{WHSP}".freeze
         AUTHORIZATION_HEADER = "Authorization".freeze
+
         API_TOKEN_HEADER = "HTTP_X_API_TOKEN".freeze
         API_TOKEN_HEADER_RFC_7230 = "X-API-TOKEN".freeze
 
-        attr_reader :idlog, :dal
+        API_CALL_ID_HEADER = "HTTP_X_API_CALL_ID".freeze
+        API_CALL_ID_HEADER_RFC_7230 = "X-API-CALL-ID".freeze
 
-        def initialize
-          @idlog = Muni::Login::Client::IdpLogger.new
-          @dal = Muni::Login::Client::DataAccessLayer.new
+        def dal
+          @dal ||= Muni::Login::Client::DataAccessLayer.new
         end
 
       end

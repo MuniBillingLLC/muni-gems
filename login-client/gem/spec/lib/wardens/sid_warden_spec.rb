@@ -2,11 +2,15 @@ require 'spec_helper'
 
 RSpec.describe Muni::Login::Client::Wardens::SidWarden do
 
+  include_examples '~: commons'
   include_examples '~: sid_tokens'
   include_examples '~: wardens'
 
   let(:idrequest) do
-    instance_double(Muni::Login::Client::IdpRequest, sid_token: known_token)
+    instance_double(Muni::Login::Client::IdpRequest,
+                    sid_token: known_token,
+                    api_call_id: random_hex_string,
+                    idlog: idlog)
   end
 
   describe "#authenticate_sid_token!" do
@@ -49,9 +53,9 @@ RSpec.describe Muni::Login::Client::Wardens::SidWarden do
     end
   end
 
-  describe "#loxy" do
+  describe "#service_proxy" do
     it do
-      expect(subj.send(:loxy))
+      expect(subj.send(:service_proxy))
         .to be_a(Muni::Login::Client::ServiceProxy)
     end
   end

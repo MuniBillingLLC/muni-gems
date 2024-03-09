@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe Muni::Login::Client::VendorCreator do
+  include_examples '~: commons'
 
   let(:subj) { described_class.new }
 

@@ -2,13 +2,14 @@ require 'spec_helper'
 
 RSpec.describe Muni::Login::Client::Wardens::VendorWarden do
 
+  include_examples '~: commons'
   include_examples '~: wardens'
 
   let(:api_user) { FactoryBot.create(:api_user) }
   let(:api_key) { api_user.api_key }
 
   let(:idrequest) do
-    instance_double(Muni::Login::Client::IdpRequest, api_token: api_token)
+    instance_double(Muni::Login::Client::IdpRequest, api_token: api_token, idlog: idlog)
   end
 
   describe "#authorize!" do

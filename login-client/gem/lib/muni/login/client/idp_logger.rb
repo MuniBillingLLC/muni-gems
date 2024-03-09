@@ -3,7 +3,7 @@ module Muni
   module Login
     module Client
       class IdpLogger
-        MUNI_GEM_VERSION = "0.0.20" # keep in sync with "muni-login-client.gemspec"
+        MUNI_GEM_VERSION = "0.0.21" # keep in sync with "muni-login-client.gemspec"
 
         def initialize
           @rails_logger = Rails.logger
@@ -34,20 +34,25 @@ module Muni
           @rails_logger.error decorate(message: message, level: "error")
         end
 
-
         private
 
-        def decorate(message:, level:)
-          msg_hash = {
-            level: level,
-            gem_version: MUNI_GEM_VERSION,
-            message: message
-          }
-          if @idrequest.present?
-            msg_hash[:action] = @idrequest.action_signature
-          end
+        def api_call_id
+          @idrequest&.api_call_id
+        end
 
-          msg_hash
+        def decorate(message:, level:)
+          Muni::Login::Client::ToolBox.reject_blanks(
+            message: message,
+            action_signature: action_signature,
+            api_call_id: api_call_id,
+            gem_version: MUNI_GEM_VERSION,
+            level: level,
+            topic: 'muni_login_client'
+          )
+        end
+
+        def action_signature
+          @idrequest&.action_signature
         end
 
       end

@@ -24,3 +24,31 @@ RSpec.shared_examples '~: wardens' do
     Muni::Login::Client::IdpCache.new.clear
   end
 end
+
+RSpec.shared_examples '~: commons' do
+  let(:idlog) do
+    instance_double(Muni::Login::Client::IdpLogger,
+                    bind: nil,
+                    trace: nil,
+                    info: nil,
+                    warn: nil,
+                    error: nil,
+                    api_call_id: nil)
+  end
+
+  let(:json_proxy) do
+    instance_double(Muni::Login::Client::JsonProxy, get_json: json_proxy_response)
+  end
+
+  let(:json_proxy_response) { random_hash }
+
+  let(:idrequest) do
+    instance_double(Muni::Login::Client::IdpRequest, idlog: idlog)
+  end
+
+  let(:idkeep) do
+    instance_double(Muni::Login::Client::IdpKeep, idlog: idlog)
+  end
+
+end
+
