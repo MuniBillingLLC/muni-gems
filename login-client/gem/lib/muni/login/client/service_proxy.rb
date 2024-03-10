@@ -3,6 +3,14 @@ module Muni
     module Client
       class ServiceProxy < Muni::Login::Client::Base
 
+        def self.build_from_request(idrequest:)
+          json_proxy = Muni::Login::Client::JsonProxy.new(
+            base_headers: { "#{API_VECTOR_HEADER_RFC_7230}" => idrequest.api_vector })
+          idlog = Muni::Login::Client::IdpLogger.new(
+            idrequest: idrequest)
+          new(json_proxy: json_proxy, idlog: idlog)
+        end
+
         def initialize(json_proxy:, idlog:)
           super()
           @idlog = idlog

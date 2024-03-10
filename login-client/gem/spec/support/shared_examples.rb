@@ -43,12 +43,14 @@ RSpec.shared_examples '~: commons' do
   let(:json_proxy_response) { random_hash }
 
   let(:idrequest) do
-    instance_double(Muni::Login::Client::IdpRequest, idlog: idlog)
+    instance_double(Muni::Login::Client::IdpRequest, idlog: idlog, api_vector: api_vector)
   end
 
   let(:idkeep) do
     instance_double(Muni::Login::Client::IdpKeep, idlog: idlog)
   end
+
+  let(:api_vector) { random_hex_string }
 
 end
 

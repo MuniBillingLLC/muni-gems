@@ -60,11 +60,7 @@ module Muni
         end
 
         def idlog
-          return @idlog if @idlog.present?
-
-          @idlog = Muni::Login::Client::IdpLogger.new
-          @idlog.bind(idrequest: self)
-          @idlog
+          @idlog ||= Muni::Login::Client::IdpLogger.new(idrequest: self)
         end
 
         private

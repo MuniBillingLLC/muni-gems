@@ -102,6 +102,15 @@ RSpec.describe Muni::Login::Client::ServiceProxy do
 
   end
 
+  describe "#build_from_request" do
+    let(:subj) { described_class.build_from_request(idrequest: idrequest) }
+
+    it do
+      expect(subj.send(:idp_locator))
+        .to be_a(Muni::Login::Client::ServiceLocator)
+    end
+  end
+
 end
 
 
