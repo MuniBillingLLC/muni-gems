@@ -10,7 +10,7 @@ module Muni
           @controller_path = controller_path
           @action_name = action_name
           @cookie_reader = cookie_reader
-          @http_headers = http_headers
+          @http_headers = http_headers || {}
 
           idlog.trace(location: "#{self.class.name}.#{__method__}",
                       controller_path: controller_path,
@@ -19,11 +19,11 @@ module Muni
         end
 
         def api_token
-          http_headers.present? ? http_headers[API_TOKEN_HEADER] : nil
+          http_headers[API_TOKEN_HEADER]
         end
 
         def api_call_id
-          http_headers.present? ? http_headers[API_CALL_ID_HEADER] : nil
+          @api_call_id ||= http_headers[API_CALL_ID_HEADER].presence || SecureRandom.alphanumeric
         end
 
         def sid_token
