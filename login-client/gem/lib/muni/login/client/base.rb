@@ -10,8 +10,8 @@ module Muni
         API_TOKEN_HEADER = "HTTP_X_API_TOKEN".freeze
         API_TOKEN_HEADER_RFC_7230 = "X-API-TOKEN".freeze
 
-        API_CALL_ID_HEADER = "HTTP_X_API_CALL_ID".freeze
-        API_CALL_ID_HEADER_RFC_7230 = "X-API-CALL-ID".freeze
+        API_VECTOR_HEADER = "HTTP_X_API_VECTOR".freeze
+        API_VECTOR_HEADER_RFC_7230 = "X-API-VECTOR".freeze
 
         def dal
           @dal ||= Muni::Login::Client::DataAccessLayer.new

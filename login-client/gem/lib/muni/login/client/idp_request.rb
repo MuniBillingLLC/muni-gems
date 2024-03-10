@@ -22,8 +22,8 @@ module Muni
           http_headers[API_TOKEN_HEADER]
         end
 
-        def api_call_id
-          @api_call_id ||= http_headers[API_CALL_ID_HEADER].presence || SecureRandom.alphanumeric
+        def api_vector
+          @api_vector ||= http_headers[API_VECTOR_HEADER].presence || SecureRandom.alphanumeric
         end
 
         def sid_token

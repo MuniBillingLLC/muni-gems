@@ -33,7 +33,7 @@ RSpec.shared_examples '~: commons' do
                     info: nil,
                     warn: nil,
                     error: nil,
-                    api_call_id: nil)
+                    api_vector: nil)
   end
 
   let(:json_proxy) do

@@ -9,7 +9,7 @@ RSpec.describe Muni::Login::Client::Wardens::SidWarden do
   let(:idrequest) do
     instance_double(Muni::Login::Client::IdpRequest,
                     sid_token: known_token,
-                    api_call_id: random_hex_string,
+                    api_vector: random_hex_string,
                     idlog: idlog)
   end
 

@@ -46,7 +46,7 @@ module Muni
 
           def base_headers
             {
-              "#{API_CALL_ID_HEADER_RFC_7230}" => idrequest.api_call_id
+              "#{API_VECTOR_HEADER_RFC_7230}" => idrequest.api_vector
             }
           end
 
