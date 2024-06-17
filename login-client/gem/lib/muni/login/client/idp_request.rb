@@ -23,7 +23,7 @@ module Muni
         end
 
         def api_vector
-          @api_vector ||= http_headers[API_VECTOR_HEADER].presence || SecureRandom.alphanumeric
+          @api_vector ||= http_headers[API_VECTOR_HEADER].presence || random_alphanumeric
         end
 
         def sid_token
@@ -64,6 +64,14 @@ module Muni
         end
 
         private
+
+        def random_alphanumeric(length: 10)
+          # the cleanest implementation would be SecureRandom.alphanumeric, unfortunately we
+          # need to support older versions of ruby, so here's an alternative based on
+          # https://jetthoughts.com/blog/generating-random-strings-with-ruby-webdev/
+          charset = [('0'..'9'), ('a'..'z'), ('A'..'Z')].flat_map(&:to_a)
+          (0...length).map { charset[rand(charset.size)] }.join
+        end
 
         def sid_token_from_cookies
           @cookie_reader&.sid_token
