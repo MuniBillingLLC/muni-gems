@@ -3,21 +3,21 @@ module Muni
     module Client
       class IdpRequest < Muni::Login::Client::Base
 
-        attr_reader :controller_path, :action_name, :http_headers, :referer
+        attr_reader :controller_path, :action_name, :http_headers, :referrer
 
-        def initialize(controller_path:, action_name:, cookie_reader: nil, http_headers: nil, referer: nil)
+        def initialize(controller_path:, action_name:, cookie_reader: nil, http_headers: nil, referrer: nil)
           super()
           @controller_path = controller_path
           @action_name = action_name
           @cookie_reader = cookie_reader
           @http_headers = http_headers || {}
-          @referer = referer
+          @referrer = referrer
 
           idlog.trace(location: "#{self.class.name}.#{__method__}",
                       controller_path: controller_path,
                       action_name: action_name,
                       http_headers: http_headers_hash,
-                      referer: referer)
+                      referrer: referrer)
         end
 
         def api_token

@@ -6,7 +6,7 @@ RSpec.describe Muni::Login::Client::IdpRequest do
   let(:action_name) { random_hex_string }
   let(:cookie_reader) { instance_double(Muni::Login::Client::CookieReader) }
   let(:http_headers) { Hash.new }
-  let(:referer) { random_hex_string }
+  let(:referrer) { random_hex_string }
 
   let(:subj) do
     described_class.new(
@@ -14,12 +14,12 @@ RSpec.describe Muni::Login::Client::IdpRequest do
       action_name: action_name,
       cookie_reader: cookie_reader,
       http_headers: http_headers,
-      referer: referer)
+      referrer: referrer)
   end
 
-  describe "referer" do
+  describe "referrer" do
     it do
-      expect(subj.referer).to eq(referer)
+      expect(subj.referrer).to eq(referrer)
     end
   end
 
