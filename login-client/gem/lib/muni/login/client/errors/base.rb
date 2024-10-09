@@ -22,12 +22,12 @@ module Muni
           end
 
           def to_h
-            {
+            Muni::Login::Client::ToolBox.reject_blanks(
               http_status: http_status,
               error_code: error_code,
               title: title,
               detail: detail
-            }
+            )
           end
 
           def serializable_hash
