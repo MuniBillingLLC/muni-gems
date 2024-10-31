@@ -3,18 +3,29 @@ module Muni
     module Client
       class IdpKeep < Base
 
+        # sometimes it is necessary for upstream to clear the idkeep
+        # cache. This is rare and usually happens when the stored identity
+        # (user,admin,customer) has been modified in the database and we
+        # need to fetch a fresh copy. Clearing the cache is a benign operation
+        # and does not affect the stored identities.
+        delegate :clear_cache, to: :dal
+
+
         def initialize(secure_identity: nil)
           super()
           @properties = {}
           self.sid = secure_identity&.sid
         end
 
+        # Clear the keep, expel all stored identities and metadata. This operation
+        # is highly intrusive, it flushes the keep and is usually performed at sing-out
         def clear
           idlog.trace(
             location: "#{self.class.name}.#{__method__}",
             sid: sid)
 
           @properties.clear
+          clear_cache
         end
 
         def admin
