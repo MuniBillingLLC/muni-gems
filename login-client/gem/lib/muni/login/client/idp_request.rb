@@ -18,14 +18,30 @@ module Muni
           @controller_path = controller_path
           @action_name = action_name
           @cookie_reader = cookie_reader
-          @http_headers = (http_headers || {}).with_indifferent_access
           @referrer = referrer
-          @query_params = (query_params || {}).with_indifferent_access
+
+          @http_headers = if http_headers.nil?
+                            HashWithIndifferentAccess.new
+                          elsif http_headers.is_a?(Hash)
+                            http_headers.with_indifferent_access
+                          else
+                            # most likely an instance of ActionDispatch::Http::Headers
+                            http_headers
+                          end
+
+          @query_params = if query_params.nil?
+                            HashWithIndifferentAccess.new
+                          elsif query_params.is_a?(Hash)
+                            query_params.with_indifferent_access
+                          else
+                            # most likely an instance of ActionController::Parameters
+                            query_params
+                          end
 
           idlog.trace(location: "#{self.class.name}.#{__method__}",
                       controller_path: controller_path,
                       action_name: action_name,
-                      http_headers: http_headers_hash,
+                      http_headers: filtered_http_headers,
                       referrer: referrer)
         end
 
@@ -64,22 +80,21 @@ module Muni
           "#{@controller_path}|#{@action_name}"
         end
 
-        # based on https://stackoverflow.com/questions/32405155/display-or-get-the-http-header-attributes-in-rails-4
-        def http_headers_hash
-          if http_headers.nil?
-            {}
-          elsif http_headers.is_a?(ActionDispatch::Http::Headers)
-            http_headers.env.select { |k, _| k.in?(ActionDispatch::Http::Headers::CGI_VARIABLES) || k =~ /^HTTP_/ }
-          else
-            http_headers
-          end
-        end
 
         def idlog
           @idlog ||= Muni::Login::Client::IdpLogger.new(idrequest: self)
         end
 
         private
+
+        # based on https://stackoverflow.com/questions/32405155/display-or-get-the-http-header-attributes-in-rails-4
+        def filtered_http_headers
+          if http_headers.is_a?(ActionDispatch::Http::Headers)
+            http_headers.env.select { |k, _| k.in?(ActionDispatch::Http::Headers::CGI_VARIABLES) || k =~ /^HTTP_/ }
+          else
+            http_headers
+          end
+        end
 
         def random_alphanumeric(length: 10)
           # the cleanest implementation would be SecureRandom.alphanumeric, unfortunately we
