@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Muni::Login::Client::Wardens::Base do
+RSpec.describe Muni::Login::Client::Wardens::AbstractWarden do
 
   include_examples '~: commons'
   include_examples '~: wardens'

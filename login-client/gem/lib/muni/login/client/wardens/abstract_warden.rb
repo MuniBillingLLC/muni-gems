@@ -2,13 +2,12 @@ module Muni
   module Login
     module Client
       module Wardens
-        class Base < Muni::Login::Client::Base
+        class AbstractWarden < Muni::Login::Client::Base
           include Concerns::BelongsToRequest
 
-          attr_reader :idkeep, :idrequest
+          attr_reader :idkeep
 
           def initialize(idrequest:, idkeep:)
-            super()
             @idrequest = idrequest
             @idkeep = idkeep
             idkeep.idlog.bind(idrequest: idrequest)

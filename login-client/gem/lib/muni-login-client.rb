@@ -11,7 +11,7 @@ require 'muni/login/client/errors/forbidden'
 require 'muni/login/client/errors/malformed_identity'
 require 'muni/login/client/errors/unauthorized'
 
-require 'muni/login/client/wardens/base'
+require 'muni/login/client/wardens/abstract_warden'
 require 'muni/login/client/wardens/sid_warden'
 require 'muni/login/client/wardens/vendor_warden'
 

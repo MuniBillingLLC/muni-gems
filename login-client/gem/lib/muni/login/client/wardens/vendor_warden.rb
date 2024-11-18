@@ -2,7 +2,7 @@ module Muni
   module Login
     module Client
       module Wardens
-        class VendorWarden < Base
+        class VendorWarden < AbstractWarden
 
           def authorize!
             secure_identity = create_identity!

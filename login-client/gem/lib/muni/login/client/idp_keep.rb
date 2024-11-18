@@ -1,7 +1,7 @@
 module Muni
   module Login
     module Client
-      class IdpKeep < Base
+      class IdpKeep < Muni::Login::Client::Base
 
         # sometimes it is necessary for upstream to clear the idkeep
         # cache. This is rare and usually happens when the stored identity
@@ -12,7 +12,6 @@ module Muni
 
 
         def initialize(secure_identity: nil)
-          super()
           @properties = {}
           self.sid = secure_identity&.sid
         end

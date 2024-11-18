@@ -9,7 +9,7 @@ module Muni
   module Login
     module Client
       module Errors
-        class BadGateway < Base
+        class BadGateway < Muni::Login::Client::Errors::Base
           def initialize(error_code: nil, detail: nil)
             super(
               http_status: 502,

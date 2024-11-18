@@ -12,7 +12,6 @@ module Muni
         end
 
         def initialize(json_proxy:, idlog:)
-          super()
           @idlog = idlog
           @json_proxy = json_proxy
           @idp_locator = Muni::Login::Client::ServiceLocator.new(json_proxy: json_proxy, idlog: idlog)

@@ -2,7 +2,7 @@ module Muni
   module Login
     module Client
       module Wardens
-        class SidWarden < Base
+        class SidWarden < AbstractWarden
 
           def authorize!
             idkeep.set_property(:sid_token, sid_token)

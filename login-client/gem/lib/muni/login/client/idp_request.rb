@@ -14,7 +14,6 @@ module Muni
                        http_headers: nil,
                        referrer: nil,
                        query_params: nil)
-          super()
           @controller_path = controller_path
           @action_name = action_name
           @cookie_reader = cookie_reader

@@ -6,7 +6,7 @@ module Muni
   module Login
     module Client
       module Errors
-        class Unauthorized < Base
+        class Unauthorized < Muni::Login::Client::Errors::Base
           def initialize(error_code: nil, detail: nil)
             super(
               http_status: 401,
