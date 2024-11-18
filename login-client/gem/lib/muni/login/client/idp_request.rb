@@ -2,16 +2,25 @@ module Muni
   module Login
     module Client
       class IdpRequest < Muni::Login::Client::Base
+        include ::ActiveSupport::Configurable
 
-        attr_reader :controller_path, :action_name, :http_headers, :referrer
+        config_accessor :sid_token_from_query_params_allowed
 
-        def initialize(controller_path:, action_name:, cookie_reader: nil, http_headers: nil, referrer: nil)
+        attr_reader :controller_path, :action_name, :http_headers, :referrer, :query_params
+
+        def initialize(controller_path:,
+                       action_name:,
+                       cookie_reader: nil,
+                       http_headers: nil,
+                       referrer: nil,
+                       query_params: nil)
           super()
           @controller_path = controller_path
           @action_name = action_name
           @cookie_reader = cookie_reader
-          @http_headers = http_headers || {}
+          @http_headers = (http_headers || {}).with_indifferent_access
           @referrer = referrer
+          @query_params = (query_params || {}).with_indifferent_access
 
           idlog.trace(location: "#{self.class.name}.#{__method__}",
                       controller_path: controller_path,
@@ -39,6 +48,11 @@ module Muni
                                        message: 'sid_token_from_headers',
                                        header_name: AUTHORIZATION_HEADER)
                            sid_token_from_headers
+                         elsif sid_token_from_query_params.present?
+                           idlog.trace(location: "#{self.class.name}.#{__method__}",
+                                       message: 'sid_token_from_query_params',
+                                       param_name: 'sid_token')
+                           sid_token_from_query_params
                          else
                            idlog.trace(location: "#{self.class.name}.#{__method__}",
                                        message: 'sid_token not present')
@@ -81,6 +95,12 @@ module Muni
 
         def sid_token_from_headers
           http_headers.present? ? http_headers[AUTHORIZATION_HEADER].to_s.split(WHSP).last : nil
+        end
+
+        def sid_token_from_query_params
+          if self.sid_token_from_query_params_allowed == true
+            query_params[:sid_token]
+          end
         end
 
       end
