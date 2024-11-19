@@ -33,7 +33,7 @@ module Muni
           idlog.trace(
             location: "#{self.class.name}.#{__method__}",
             issuer_url: issuer_url,
-            idp_uri: idp_uri,
+            idp_uri: idp_uri.to_s,
             message: "Resolved")
 
           idp_response = get_idp_response(sid_token: sid_token, idp_uri: idp_uri)
@@ -46,7 +46,7 @@ module Muni
           idlog.info(
             location: "#{self.class.name}.#{__method__}",
             sid: sid,
-            idp_uri: idp_uri,
+            idp_uri: idp_uri.to_s,
             message: "Authenticated")
         end
 

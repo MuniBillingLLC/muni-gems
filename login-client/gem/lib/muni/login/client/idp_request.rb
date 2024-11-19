@@ -4,6 +4,8 @@ module Muni
       class IdpRequest < Muni::Login::Client::Base
         include ::ActiveSupport::Configurable
 
+        # Allow passing of SIDToken via query parameters. This is only
+        # needed in specific cases, and is "false" by default
         config_accessor :sid_token_from_query_params_allowed
 
         attr_reader :controller_path, :action_name, :http_headers, :referrer, :query_params
@@ -79,7 +81,6 @@ module Muni
           "#{@controller_path}|#{@action_name}"
         end
 
-
         def idlog
           @idlog ||= Muni::Login::Client::IdpLogger.new(idrequest: self)
         end
@@ -112,9 +113,18 @@ module Muni
         end
 
         def sid_token_from_query_params
+          original_value = query_params[:sid_token] || query_params['sid_token']
+
+          return nil if original_value.blank?
+
           if self.sid_token_from_query_params_allowed == true
-            query_params[:sid_token]
+            original_value
+          else
+            idlog.warn(location: "#{self.class.name}.#{__method__}",
+                       message: 'value present but not allowed')
+            nil
           end
+
         end
 
       end
