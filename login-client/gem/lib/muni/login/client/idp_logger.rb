@@ -44,12 +44,22 @@ module Muni
         end
 
         def decorate(message:, level:)
+          location = if message.is_a?(Hash)
+                       message[:location]
+                     end
+          message2 = if message.is_a?(Hash)
+                       message.except(:location)
+                     else
+                       message
+                     end
+
           Muni::Login::Client::ToolBox.reject_blanks(
-            message: message,
+            level: level,
+            location: location,
+            message: message2,
             action_signature: action_signature,
             api_vector: api_vector,
             gem_version: MUNI_GEM_VERSION,
-            level: level,
             topic: 'muni_login_client'
           )
         end
