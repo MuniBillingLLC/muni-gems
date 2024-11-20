@@ -77,7 +77,11 @@ module Muni
         # Controls IDP log levels. Never enable this in prod, since log traces
         # may contain privileged information. The setting is meant to facilitate development
         def log_trace_enabled?
-          self.config.log_trace_enabled || ENV['MUNIDEV_IDPLOG_TRACE'].present?
+          if self.config.log_trace_enabled.nil?
+            ENV['MUNIDEV_IDPLOG_TRACE'].present?
+          else
+            self.config.log_trace_enabled == true
+          end
         end
 
         private
