@@ -29,25 +29,26 @@ module Muni
           self.config.sid_cookie_duration || 7.days
         end
 
-        # IDP cache policies
+        # The application name in the muni universe. You may see this in the logs
+        # and some. It also impacts the redis storage location
         def idpc_app_name
           self.config.idpc_app_name
         end
 
-        # IDP cache policies
+        # Controls the location of the IDP cache storage in redis
         def idpc_redis_bucket
-          self.config.idpc_redis_bucket
+          self.config.idpc_redis_bucket || ENV['REDIS_NAMESPACE']
         end
 
-        # IDP cache policies
+        # Controls IDP cache expiration
         def idpc_retention
-          self.config.idpc_retention
+          self.config.idpc_retention ||  15.minutes
         end
 
         # This is a CSV list (of strings), which is set during initialization
         # if the list is not set, the locator will always return the original URL
         def login_service_url_list
-          self.config.login_service_url_list
+          self.config.login_service_url_list || ENV['LOGIN_SERVICE_URL_LIST']
         end
 
         # a special purpose API secret, for communicating between our own services
