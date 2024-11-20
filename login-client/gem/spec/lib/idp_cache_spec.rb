@@ -4,13 +4,24 @@ RSpec.describe Muni::Login::Client::IdpCache do
   let(:subj) { described_class.new }
 
   describe "#settings" do
+    let(:idpc_retention) { 77.minutes }
+    let(:idpc_app_name) { random_hex_string }
+    let(:idpc_redis_bucket) { random_hex_string }
     let(:expected) do
       {
         :adapter_name => "idp",
-        :app_name => "spec_app",
-        :redis_bucket => "spec_bucket",
-        :retention => 5.minutes
+        :app_name => idpc_app_name,
+        :redis_bucket => idpc_redis_bucket,
+        :retention => idpc_retention
       }
+    end
+    before do
+      allow_any_instance_of(Muni::Login::Client::Settings)
+        .to receive(:idpc_retention).and_return(idpc_retention)
+      allow_any_instance_of(Muni::Login::Client::Settings)
+        .to receive(:idpc_app_name).and_return(idpc_app_name)
+      allow_any_instance_of(Muni::Login::Client::Settings)
+        .to receive(:idpc_redis_bucket).and_return(idpc_redis_bucket)
     end
     it do
       expect(subj.settings).to eq(expected)

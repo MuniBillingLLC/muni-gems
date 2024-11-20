@@ -11,12 +11,13 @@ module Muni
                         :idpc_redis_bucket,
                         :idpc_retention,
                         :login_service_url_list,
+                        :log_trace_enabled,
                         :api_secrets_csv
 
         # Allow passing of SIDToken via query parameters. This is only
         # needed in specific cases, and is "false" by default
-        def sid_token_from_query_params_allowed
-          self.config.sid_token_from_query_params_allowed
+        def sid_token_from_query_params_allowed?
+          self.config.sid_token_from_query_params_allowed == true
         end
 
         # The name of the SID cookie
@@ -42,7 +43,7 @@ module Muni
 
         # Controls IDP cache expiration
         def idpc_retention
-          self.config.idpc_retention ||  15.minutes
+          self.config.idpc_retention || 15.minutes
         end
 
         # This is a CSV list (of strings), which is set during initialization
@@ -71,6 +72,12 @@ module Muni
                              raise Muni::Login::Client::Errors::BadConfiguration.new(
                                detail: "Please set 'api_secrets_csv' to enable secure API tokens")
                            end
+        end
+
+        # Controls IDP log levels. Never enable this in prod, since log traces
+        # may contain privileged information. The setting is meant to facilitate development
+        def log_trace_enabled?
+          self.config.log_trace_enabled || ENV['MUNIDEV_IDPLOG_TRACE'].present?
         end
 
         private

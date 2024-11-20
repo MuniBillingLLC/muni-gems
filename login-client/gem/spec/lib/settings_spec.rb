@@ -64,5 +64,53 @@ RSpec.describe Muni::Login::Client::Settings do
       end
     end
   end
+
+  describe "#api_secret" do
+    let(:value) { random_hex_string }
+    it do
+      allow(subj).to receive(:api_secrets).and_return([value, "garbage"])
+      expect(subj.api_secret).to eq value
+    end
+  end
+
+  describe "#log_trace_enabled?" do
+    let(:value) { true }
+    it do
+      expect {
+        described_class.configure do |config|
+          config.log_trace_enabled = value
+        end
+      }.to change {
+        described_class.new.log_trace_enabled?
+      }.to(value)
+    end
+  end
+
+  describe "#sid_token_from_query_params_allowed?" do
+    let(:value) { true }
+    it do
+      expect {
+        described_class.configure do |config|
+          config.sid_token_from_query_params_allowed = value
+        end
+      }.to change {
+        described_class.new.sid_token_from_query_params_allowed?
+      }.to(value)
+    end
+  end
+
+  describe "#sid_cookie_name" do
+    let(:value) { random_hex_string }
+    it do
+      expect {
+        described_class.configure do |config|
+          config.sid_cookie_name = value
+        end
+      }.to change {
+        described_class.new.sid_cookie_name
+      }.to(value)
+    end
+  end
+
 end
 

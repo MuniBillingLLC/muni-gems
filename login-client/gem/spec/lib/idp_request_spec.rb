@@ -52,7 +52,7 @@ RSpec.describe Muni::Login::Client::IdpRequest do
     context "enabled" do
       before do
         allow_any_instance_of(Muni::Login::Client::Settings)
-          .to receive(:sid_token_from_query_params_allowed)
+          .to receive(:sid_token_from_query_params_allowed?)
                 .and_return(true)
       end
       it do
@@ -63,7 +63,7 @@ RSpec.describe Muni::Login::Client::IdpRequest do
     context "disabled" do
       before do
         allow_any_instance_of(Muni::Login::Client::Settings)
-          .to receive(:sid_token_from_query_params_allowed)
+          .to receive(:sid_token_from_query_params_allowed?)
                 .and_return(false)
       end
       it do

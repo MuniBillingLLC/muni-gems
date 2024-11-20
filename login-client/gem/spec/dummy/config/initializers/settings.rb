@@ -12,10 +12,6 @@ Muni::Login::Client::Settings.configure do |config|
   # ... it impacts the naming or redis buckets
   config.idpc_redis_bucket =  "spec_bucket"
 
-  # HARDCODED
-  # Controls default cache expiration
-  config.idpc_retention = 5.minutes
-
   # List of login service locations
   config.login_service_url_list = "http://test1.munidev.local,http://test2.munidev.local"
 end

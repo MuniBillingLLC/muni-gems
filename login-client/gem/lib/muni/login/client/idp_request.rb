@@ -116,7 +116,7 @@ module Muni
 
           return nil if original_value.blank?
 
-          if self.sid_token_from_query_params_allowed == true
+          if sid_token_from_query_params_allowed?
             original_value
           else
             idlog.warn(location: "#{self.class.name}.#{__method__}",
@@ -126,7 +126,7 @@ module Muni
 
         end
 
-        delegate :sid_cookie_name, :sid_token_from_query_params_allowed, to: :gem_settings
+        delegate :sid_cookie_name, :sid_token_from_query_params_allowed?, to: :gem_settings
 
         def gem_settings
           @gem_settings ||= Muni::Login::Client::Settings.new

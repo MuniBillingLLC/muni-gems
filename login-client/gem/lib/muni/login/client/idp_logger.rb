@@ -3,7 +3,7 @@ module Muni
   module Login
     module Client
       class IdpLogger
-        MUNI_GEM_VERSION = "0.0.33" # keep in sync with "muni-login-client.gemspec"
+        MUNI_GEM_VERSION = "0.0.34" # keep in sync with "muni-login-client.gemspec"
 
         def initialize(idrequest: nil)
           @rails_logger = Rails.logger
@@ -18,7 +18,7 @@ module Muni
         # never enable this in prod, since traces may contain privileged
         # information
         def trace(message)
-          if ENV['MUNIDEV_IDPLOG_TRACE'].present?
+          if log_trace_enabled?
             @rails_logger.info decorate(message: message, level: "trace")
           end
         end
@@ -37,6 +37,8 @@ module Muni
 
         private
 
+        delegate :log_trace_enabled?, to: :gem_settings
+
         def api_vector
           @idrequest&.api_vector
         end
@@ -54,6 +56,10 @@ module Muni
 
         def action_signature
           @idrequest&.action_signature
+        end
+
+        def gem_settings
+          @gem_settings ||= Muni::Login::Client::Settings.new
         end
 
       end
