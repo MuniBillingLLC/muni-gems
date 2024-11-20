@@ -70,6 +70,14 @@ module Muni
           @properties[:sid] = value
         end
 
+        def sid_token_origin
+          @properties[:sid_token_origin]
+        end
+
+        def sid_token_origin=(value)
+          @properties[:sid_token_origin] = value
+        end
+
         def secure_identity
           dal.find_secure_identity_by_sid(sid)
         end

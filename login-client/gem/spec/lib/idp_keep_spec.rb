@@ -79,6 +79,17 @@ RSpec.describe Muni::Login::Client::IdpKeep do
     end
   end
 
+  describe "#sid_token_origin" do
+    let(:value) { random_hex_string }
+    it do
+      expect {
+        subj.set_property(:sid_token_origin, value)
+      }.to change {
+        subj.sid_token_origin
+      }.to(value)
+    end
+  end
+
   describe "#decoded_token" do
     let(:value) { random_hex_string }
     it do

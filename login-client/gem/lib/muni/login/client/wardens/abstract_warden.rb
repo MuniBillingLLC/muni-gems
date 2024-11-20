@@ -17,6 +17,7 @@ module Muni
 
           def accept_identity(secure_identity)
             idkeep.sid = secure_identity.sid
+            idkeep.sid_token_origin = idrequest.sid_token_origin
 
             idlog.trace(
               location: "#{self.class.name}.#{__method__}",

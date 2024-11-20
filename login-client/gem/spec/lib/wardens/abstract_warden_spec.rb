@@ -12,7 +12,9 @@ RSpec.describe Muni::Login::Client::Wardens::AbstractWarden do
         subj.send(:accept_identity, secure_identity)
       }.to change {
         idkeep.secure_identity
-      }.to(secure_identity)
+      }.to(secure_identity).and change {
+        idkeep.sid_token_origin
+      }.to(idrequest.sid_token_origin)
     end
   end
 
