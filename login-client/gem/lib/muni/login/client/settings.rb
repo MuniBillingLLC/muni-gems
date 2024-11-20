@@ -78,7 +78,7 @@ module Muni
         # may contain privileged information. The setting is meant to facilitate development
         def log_trace_enabled?
           if self.config.log_trace_enabled.nil?
-            ENV['MUNIDEV_IDPLOG_TRACE'].present?
+            ENV['MUNIDEV_IDPLOG_TRACE'].to_s.downcase == 'true'
           else
             self.config.log_trace_enabled == true
           end
