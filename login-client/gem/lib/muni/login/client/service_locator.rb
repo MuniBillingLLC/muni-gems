@@ -8,19 +8,14 @@
 # docker network and the external host network. Imagine service A depends on service B. Then A
 # can be made aware of all possible addresses of B by setting the url_list config value. E.g. somewhere
 # in A's initializers, you'll have:
-#   config_url_list = "http//b1.somedomain, http//b2.anotherdomain"
+#   login_service_url_list = "http//b1.somedomain, http//b2.anotherdomain"
 # which will make it possible for A to find B inside on both host and docker networks and use the two
 # interchangeably
 module Muni
   module Login
     module Client
       class ServiceLocator
-        include ActiveSupport::Configurable
         require "resolv"
-
-        # This is a CSV list (of strings), which is set during initialization
-        # if the list is not set, the locator will always return the original URL
-        config_accessor :config_url_list
 
         def initialize(json_proxy:, idlog:)
           @idlog = idlog
@@ -61,7 +56,8 @@ module Muni
 
         # convert the CSV list to a proper array of URI objects
         def service_aliases
-          @service_uris ||= Muni::Login::Client::UriGroup.parse_csv(self.config_url_list)
+          @service_uris ||= Muni::Login::Client::UriGroup.parse_csv(
+            gem_settings.login_service_url_list)
         end
 
         def checkpoint_uri(base_uri:, depth: 'small')
@@ -116,6 +112,10 @@ module Muni
 
         def make_cache_key(hash_signature)
           hash_signature.merge(class_name: self.class.name).to_s
+        end
+
+        def gem_settings
+          @gem_settings ||= Muni::Login::Client::Settings.new
         end
 
       end

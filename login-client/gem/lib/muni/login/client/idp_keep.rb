@@ -10,7 +10,6 @@ module Muni
         # and does not affect the stored identities.
         delegate :clear_cache, to: :dal
 
-
         def initialize(secure_identity: nil)
           @properties = {}
           self.sid = secure_identity&.sid
@@ -49,7 +48,7 @@ module Muni
         def system_api_token
           @system_api_token ||= [
             system_api_user&.api_key,
-            vsv.system_api_secret
+            gem_settings.api_secret
           ].join(':')
         end
 
@@ -94,8 +93,9 @@ module Muni
           @system_api_user ||= ApiUser.where("api_key like 'SYSTEM_%'").first || ApiUser.where(locked_at: nil).first
         end
 
-        def vsv
-          @vsv ||= Muni::Login::Client::VendorSecretValidator.new(idkeep: self)
+
+        def gem_settings
+          @gem_settings ||= Muni::Login::Client::Settings.new
         end
 
       end

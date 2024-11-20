@@ -51,9 +51,9 @@ RSpec.describe Muni::Login::Client::IdpRequest do
 
     context "enabled" do
       before do
-        described_class.configure do |config|
-          config.sid_token_from_query_params_allowed = true
-        end
+        allow_any_instance_of(Muni::Login::Client::Settings)
+          .to receive(:sid_token_from_query_params_allowed)
+                .and_return(true)
       end
       it do
         expect(subj.send(:sid_token_from_query_params)).to eq(sid_token)
@@ -62,14 +62,79 @@ RSpec.describe Muni::Login::Client::IdpRequest do
 
     context "disabled" do
       before do
-        described_class.configure do |config|
-          config.sid_token_from_query_params_allowed = false
-        end
+        allow_any_instance_of(Muni::Login::Client::Settings)
+          .to receive(:sid_token_from_query_params_allowed)
+                .and_return(false)
       end
       it do
         expect(subj.send(:sid_token_from_query_params)).to be_nil
       end
     end
+  end
+
+  describe "sid_token" do
+    let(:sid_token) { random_hex_string }
+
+    context "from cookies" do
+      before do
+        allow(subj).to receive(:sid_token_from_cookies).and_return(sid_token)
+      end
+
+      it "returns the value" do
+        expect(subj.sid_token).to eq(sid_token)
+      end
+
+      it "sets the origin" do
+        expect {
+          subj.sid_token
+        }.to change {
+          subj.sid_token_origin
+        }.to('cookies')
+      end
+
+    end
+
+    context "from request header" do
+      before do
+        allow(subj).to receive(:sid_token_from_cookies).and_return(nil)
+        allow(subj).to receive(:sid_token_from_headers).and_return(sid_token)
+      end
+
+      it "returns the value" do
+        expect(subj.sid_token).to eq(sid_token)
+      end
+
+      it "sets the origin" do
+        expect {
+          subj.sid_token
+        }.to change {
+          subj.sid_token_origin
+        }.to('request_header')
+      end
+
+    end
+
+    context "from query params" do
+      before do
+        allow(subj).to receive(:sid_token_from_cookies).and_return(nil)
+        allow(subj).to receive(:sid_token_from_headers).and_return(nil)
+        allow(subj).to receive(:sid_token_from_query_params).and_return(sid_token)
+      end
+
+      it "returns the value" do
+        expect(subj.sid_token).to eq(sid_token)
+      end
+
+      it "sets the origin" do
+        expect {
+          subj.sid_token
+        }.to change {
+          subj.sid_token_origin
+        }.to('query_params')
+      end
+
+    end
+
   end
 
 end

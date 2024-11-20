@@ -32,7 +32,6 @@ module Muni
 
         private
 
-
         def to_uri(value)
           if value.is_a?(String)
             URI.parse(value)

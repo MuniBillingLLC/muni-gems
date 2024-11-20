@@ -2,9 +2,6 @@ module Muni
   module Login
     module Client
       class IdpCache
-        include ::ActiveSupport::Configurable
-
-        config_accessor :config_app_name, :config_redis_bucket, :config_retention
 
         def delete(cache_key:)
           decorated_key = decorated(cache_key)
@@ -27,10 +24,10 @@ module Muni
 
         def settings
           @settings ||= Muni::Login::Client::ToolBox.reject_blanks(
-            app_name: self.config_app_name,
-            redis_bucket: self.config_redis_bucket,
-            retention: self.config_retention,
-            adapter_name: adapter_name
+            app_name: gem_settings.idpc_app_name,
+            redis_bucket: gem_settings.idpc_redis_bucket,
+            retention: gem_settings.idpc_retention,
+            adapter_name: "idp"
           )
         end
 
@@ -40,9 +37,6 @@ module Muni
 
         private
 
-        def adapter_name
-          "idp"
-        end
 
         def decorated(cache_key)
           result = []
@@ -65,6 +59,10 @@ module Muni
 
         def norm(string)
           string.to_s.squish
+        end
+
+        def gem_settings
+          @gem_settings ||= Muni::Login::Client::Settings.new
         end
 
       end

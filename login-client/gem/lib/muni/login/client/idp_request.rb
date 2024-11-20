@@ -2,13 +2,8 @@ module Muni
   module Login
     module Client
       class IdpRequest < Muni::Login::Client::Base
-        include ::ActiveSupport::Configurable
 
-        # Allow passing of SIDToken via query parameters. This is only
-        # needed in specific cases, and is "false" by default
-        config_accessor :sid_token_from_query_params_allowed
-
-        attr_reader :controller_path, :action_name, :http_headers, :referrer, :query_params
+        attr_reader :controller_path, :action_name, :http_headers, :referrer, :query_params, :sid_token_origin
 
         def initialize(controller_path:,
                        action_name:,
@@ -57,20 +52,24 @@ module Muni
         def sid_token
           @sid_token ||= if sid_token_from_cookies.present?
                            idlog.trace(location: "#{self.class.name}.#{__method__}",
-                                       message: 'sid_token_from_cookies',
-                                       cookie_name: @cookie_reader.sid_cookie_name)
+                                       sid_token_origin: 'cookies',
+                                       cookie_name: sid_cookie_name)
+                           @sid_token_origin = "cookies"
                            sid_token_from_cookies
                          elsif sid_token_from_headers.present?
                            idlog.trace(location: "#{self.class.name}.#{__method__}",
-                                       message: 'sid_token_from_headers',
+                                       sid_token_origin: 'request_header',
                                        header_name: AUTHORIZATION_HEADER)
+                           @sid_token_origin = "request_header"
                            sid_token_from_headers
                          elsif sid_token_from_query_params.present?
                            idlog.trace(location: "#{self.class.name}.#{__method__}",
-                                       message: 'sid_token_from_query_params',
+                                       sid_token_origin: 'query_params',
                                        param_name: 'sid_token')
+                           @sid_token_origin = "query_params"
                            sid_token_from_query_params
                          else
+                           @sid_token_origin = nil
                            idlog.trace(location: "#{self.class.name}.#{__method__}",
                                        message: 'sid_token not present')
                            nil
@@ -125,6 +124,12 @@ module Muni
             nil
           end
 
+        end
+
+        delegate :sid_cookie_name, :sid_token_from_query_params_allowed, to: :gem_settings
+
+        def gem_settings
+          @gem_settings ||= Muni::Login::Client::Settings.new
         end
 
       end

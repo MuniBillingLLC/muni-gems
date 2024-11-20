@@ -5,33 +5,21 @@ RSpec.describe Muni::Login::Client::ServiceLocator do
 
   let(:primary_uri) { random_uri }
   let(:alternative_uri) { random_uri }
-
-  let(:subj) do
-    retval = described_class.new(json_proxy: json_proxy, idlog: idlog)
-    retval.config.config_url_list = [primary_uri.to_s, alternative_uri.to_s].join(',')
-    retval
+  let(:subj) { described_class.new(json_proxy: json_proxy, idlog: idlog) }
+  let(:login_service_url_list) { [primary_uri.to_s, alternative_uri.to_s].join(',') }
+  before do
+    allow_any_instance_of(Muni::Login::Client::Settings)
+      .to receive(:login_service_url_list)
+            .and_return(login_service_url_list)
   end
 
-
   describe "#service_aliases" do
-    context 'default' do
-      let(:result) { described_class.new(json_proxy: json_proxy, idlog: idlog).service_aliases }
-      it do
-        expect(result.size)
-          .to eq(2)
-        expect(result.members).to_not include(primary_uri)
-        expect(result.members).to_not include(alternative_uri)
-      end
-    end
-
-    context 'custom' do
-      let(:result) { subj.service_aliases }
-      it do
-        expect(result.size)
-          .to eq(2)
-        expect(result.members).to include(primary_uri)
-        expect(result.members).to include(alternative_uri)
-      end
+    let(:result) { subj.service_aliases }
+    it do
+      expect(result.size)
+        .to eq(2)
+      expect(result.members).to include(primary_uri)
+      expect(result.members).to include(alternative_uri)
     end
   end
 

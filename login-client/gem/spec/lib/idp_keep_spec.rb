@@ -145,8 +145,8 @@ RSpec.describe Muni::Login::Client::IdpKeep do
   describe "#system_api_token" do
     let(:api_user) {  FactoryBot.create(:api_user, api_key: 'my_key') }
     it do
-      allow_any_instance_of(Muni::Login::Client::VendorSecretValidator)
-        .to receive(:system_api_secret)
+      allow_any_instance_of(Muni::Login::Client::Settings)
+        .to receive(:api_secret)
               .and_return("my_secret")
 
       allow_any_instance_of(described_class)

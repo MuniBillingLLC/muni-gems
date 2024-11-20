@@ -3,10 +3,7 @@ module Muni
   module Login
     module Client
       class VendorSecretValidator < Muni::Login::Client::Base
-        include ::ActiveSupport::Configurable
         include Concerns::BelongsToKeep
-
-        config_accessor :config_csv_secrets
 
         def initialize(idkeep:)
           @idkeep = idkeep
@@ -33,59 +30,20 @@ module Muni
             location: "#{self.class.name}.#{__method__}",
             message: "Matching against all secrets",
             api_secret: api_secret.to_s.strip,
-            all_secrets: all_secrets)
+            all_secrets: api_secrets)
 
           # at this point we ignore the api_key and just check the secrets array
-          all_secrets.include?(api_secret.to_s.strip)
-        end
-
-        # a special purpose API secret, for communicating between our own services
-        # currently this is the only secret being defined
-        def system_api_secret
-          all_secrets.first
+          api_secrets.include?(api_secret.to_s.strip)
         end
 
         private
 
-        def all_secrets
-          @all_secrets ||= if self.config_csv_secrets.present?
-                             idlog.trace(
-                               location: "#{self.class.name}.#{__method__}",
-                               config_csv_secrets: self.config_csv_secrets)
+        delegate :api_secrets, to: :gem_settings
 
-                             self.config_csv_secrets
-                                 .to_s
-                                 .split(',')
-                                 .map { |item| item.strip }
-                                 .reject { |item| item.blank? }
-                                 .uniq
-                                 .sort
-                           elsif evar_csv_secrets.present?
-                             # you should consider setting config_csv_secrets in an initializer to prevent the gem
-                             # reaching out to the evars directly
-                             Rails.logger.warn "VendorSecretValidator.config_csv_secrets not set; using value from MUNI_API_SECRETS_CSV"
-
-                             idlog.trace(
-                               location: "#{self.class.name}.#{__method__}",
-                               evar_csv_secrets: evar_csv_secrets)
-
-                             evar_csv_secrets
-                               .to_s
-                               .split(',')
-                               .map { |item| item.strip }
-                               .reject { |item| item.blank? }
-                               .uniq
-                               .sort
-                           else
-                             # see https://jiramb.atlassian.net/browse/MBMAIN-8328
-                             raise Muni::Login::Client::Errors::BadConfiguration.new(
-                               detail: "Please set 'config_csv_secrets' to enable secure API tokens")
-                           end
+        def gem_settings
+          @gem_settings ||= Muni::Login::Client::Settings.new
         end
 
-        def evar_csv_secrets
-          ENV['MUNI_API_SECRETS_CSV']
-        end
       end
     end
   end
