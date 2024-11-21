@@ -16,7 +16,6 @@ require 'muni/login/client/wardens/sid_warden'
 require 'muni/login/client/wardens/vendor_warden'
 
 require 'muni/login/client/cookie_reader'
-require 'muni/login/client/cookie_writer'
 require 'muni/login/client/data_access_layer'
 require 'muni/login/client/idp_cache'
 require 'muni/login/client/idp_keep'
