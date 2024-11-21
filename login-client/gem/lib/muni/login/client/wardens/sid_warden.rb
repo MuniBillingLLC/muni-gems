@@ -16,6 +16,10 @@ module Muni
           private
 
           def authenticate_sid_token!
+            if Time.now.to_i > token_expiration
+              raise Muni::Login::Client::Errors::MalformedIdentity.new(detail: "Expired token")
+            end
+
             dal.authenticate_sid_token!(
               sid_token: sid_token,
               decoded_token: decoded_token,
@@ -23,13 +27,17 @@ module Muni
           end
 
           def decoded_token
-            Muni::Login::Client::JwtDecoder.new(sid_token).jwt_decode
+            @decoded_token ||= Muni::Login::Client::JwtDecoder.new(sid_token).jwt_decode
           rescue StandardError => e
             idlog.info(
               location: "#{self.class.name}.#{__method__}",
               sid_token: sid_token,
               message: e.message)
             raise Muni::Login::Client::Errors::MalformedIdentity.new(detail: "Invalid token")
+          end
+
+          def token_expiration
+            decoded_token[:exp].to_i
           end
 
           def service_proxy

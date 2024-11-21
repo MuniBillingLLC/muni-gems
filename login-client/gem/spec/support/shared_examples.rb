@@ -1,6 +1,6 @@
 RSpec.shared_examples '~: sid_tokens' do
 
-  let(:known_token) do
+  let(:expired_token) do
     [
       "eyJhbGciOiJIUzI1NiJ9.",
       "eyJpc3MiOiIzM2ZjMjI0MmY5ZTc2NzlkM2I5YmYwNDM3NjQwZTAyNyIsInN1YiI6ImNhZDM1ZDQ5",
@@ -9,6 +9,28 @@ RSpec.shared_examples '~: sid_tokens' do
       "NTA1MTUxLCJpYXQiOjE2Nzc1OTk1NTF9",
       ".BvUNU9etZhkFK6TSxOi2HXWkcQ37xfI2TFSVUJkc5uo"
     ].join(nil.to_s)
+  end
+
+  let(:jwt_key) do
+    SecureRandom.hex
+  end
+
+  # this is arguably the most important part of the token, it contains the SID value
+  let(:jwt_subject) do
+    SecureRandom.hex
+  end
+
+  let(:valid_token) do
+    JWT.encode(jwt_claims, jwt_key)
+  end
+
+  let(:jwt_claims) do
+    {
+      iss: "http://#{SecureRandom.hex(3)}.#{SecureRandom.hex(3)}.local",
+      sub: jwt_subject,
+      exp: (DateTime.current + 3.days).utc.to_i,
+      iat: DateTime.current.utc.to_i
+    }
   end
 
 end

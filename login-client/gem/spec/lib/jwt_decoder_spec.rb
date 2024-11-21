@@ -3,7 +3,7 @@ require 'spec_helper'
 RSpec.describe Muni::Login::Client::JwtDecoder do
   include_examples '~: sid_tokens'
 
-  let(:subj) { described_class.new(known_token) }
+  let(:subj) { described_class.new(expired_token) }
 
   describe "#jwt_decode" do
     it do

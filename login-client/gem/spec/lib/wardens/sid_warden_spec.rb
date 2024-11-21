@@ -8,18 +8,40 @@ RSpec.describe Muni::Login::Client::Wardens::SidWarden do
 
   let(:idrequest) do
     instance_double(Muni::Login::Client::IdpRequest,
-                    sid_token: known_token,
+                    sid_token: expired_token,
                     api_vector: random_hex_string,
                     idlog: idlog)
   end
 
   describe "#authenticate_sid_token!" do
-    it do
-      expect_any_instance_of(Muni::Login::Client::ServiceProxy)
-        .to receive(:authenticate_sid_token!)
-
-      subj.send(:authenticate_sid_token!)
+    context 'expired_token' do
+      it do
+        expect {
+          subj.send(:authenticate_sid_token!)
+        }.to raise_error(Muni::Login::Client::Errors::MalformedIdentity) do |err|
+          expect(err.http_status).to eq(500)
+          expect(err.error_code).to eq(1001)
+          expect(err.detail).to eq("Expired token")
+        end
+      end
     end
+
+    context 'valid_token' do
+      let(:idrequest) do
+        instance_double(Muni::Login::Client::IdpRequest,
+                        sid_token: valid_token,
+                        api_vector: random_hex_string,
+                        idlog: idlog)
+      end
+
+      it do
+        expect_any_instance_of(Muni::Login::Client::ServiceProxy)
+          .to receive(:authenticate_sid_token!)
+
+        subj.send(:authenticate_sid_token!)
+      end
+    end
+
   end
 
   describe "#decoded_token" do
@@ -49,7 +71,7 @@ RSpec.describe Muni::Login::Client::Wardens::SidWarden do
   describe "#sid_token" do
     it do
       expect(subj.send(:sid_token))
-        .to eq(known_token)
+        .to eq(expired_token)
     end
   end
 
