@@ -112,5 +112,16 @@ RSpec.describe Muni::Login::Client::Settings do
     end
   end
 
+  describe "#parse_iso8601_duration" do
+    let(:value) { 'P37D' }
+    it do
+      expect(subj.send(:parse_iso8601_duration,value))
+        .to be_a(ActiveSupport::Duration)
+
+      expect(subj.send(:parse_iso8601_duration,value))
+        .to eq(37.days)
+    end
+  end
+
 end
 

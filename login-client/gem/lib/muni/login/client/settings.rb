@@ -27,7 +27,16 @@ module Muni
 
         # Control the default policy of the sid cookie
         def sid_cookie_duration
-          self.config.sid_cookie_duration || 7.days
+          if self.config.sid_cookie_duration.present?
+            self.config.sid_cookie_duration
+          elsif ENV['MUNI_SID_COOKIE_DURATION'].present?
+            # The format must mus follow the ISO 8601 duration format
+            # Example: 'P7D', etc
+            parse_iso8601_duration(ENV['MUNI_SID_COOKIE_DURATION'])
+          else
+            # The hardcoded default value
+            7.days
+          end
         end
 
         # The application name in the muni universe. You may see this in the logs
@@ -41,9 +50,18 @@ module Muni
           self.config.idpc_redis_bucket || ENV['REDIS_NAMESPACE']
         end
 
-        # Controls IDP cache expiration
+        # Controls IDP cache duration
         def idpc_retention
-          self.config.idpc_retention || 15.minutes
+          config.idpc_retention = if self.config.idpc_retention.present?
+                                    self.config.idpc_retention
+                                  elsif ENV['MUNI_IDP_CACHE_DURATION'].present?
+                                    # The format must mus follow the ISO 8601 duration format
+                                    # Example: 'PT15M', 'PT1H', etc
+                                    parse_iso8601_duration(ENV['MUNI_IDP_CACHE_DURATION'])
+                                  else
+                                    # The hardcoded default value
+                                    15.minutes
+                                  end
         end
 
         # This is a CSV list (of strings), which is set during initialization
@@ -89,6 +107,10 @@ module Muni
         # A CSV list of secrets fot this environment
         def api_secrets_csv
           self.config.api_secrets_csv || ENV['MUNI_API_SECRETS_CSV']
+        end
+
+        def parse_iso8601_duration(value)
+          ActiveSupport::Duration.parse(value)
         end
 
       end
