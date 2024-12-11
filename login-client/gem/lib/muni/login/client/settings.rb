@@ -52,16 +52,16 @@ module Muni
 
         # Controls IDP cache duration
         def idpc_retention
-          config.idpc_retention = if self.config.idpc_retention.present?
-                                    self.config.idpc_retention
-                                  elsif ENV['MUNI_IDP_CACHE_DURATION'].present?
-                                    # The format must mus follow the ISO 8601 duration format
-                                    # Example: 'PT15M', 'PT1H', etc
-                                    parse_iso8601_duration(ENV['MUNI_IDP_CACHE_DURATION'])
-                                  else
-                                    # The hardcoded default value
-                                    15.minutes
-                                  end
+          if self.config.idpc_retention.present?
+            self.config.idpc_retention
+          elsif ENV['MUNI_IDP_CACHE_DURATION'].present?
+            # The format must mus follow the ISO 8601 duration format
+            # Example: 'PT15M', 'PT1H', etc
+            parse_iso8601_duration(ENV['MUNI_IDP_CACHE_DURATION'])
+          else
+            # The hardcoded default value
+            15.minutes
+          end
         end
 
         # This is a CSV list (of strings), which is set during initialization
