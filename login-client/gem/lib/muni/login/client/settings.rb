@@ -30,8 +30,6 @@ module Muni
           if self.config.sid_cookie_duration.present?
             self.config.sid_cookie_duration
           elsif ENV['MUNI_SID_COOKIE_DURATION'].present?
-            # The format must mus follow the ISO 8601 duration format
-            # Example: 'P7D', etc
             parse_iso8601_duration(ENV['MUNI_SID_COOKIE_DURATION'])
           else
             # The hardcoded default value
@@ -55,8 +53,6 @@ module Muni
           if self.config.idpc_retention.present?
             self.config.idpc_retention
           elsif ENV['MUNI_IDP_CACHE_DURATION'].present?
-            # The format must mus follow the ISO 8601 duration format
-            # Example: 'PT15M', 'PT1H', etc
             parse_iso8601_duration(ENV['MUNI_IDP_CACHE_DURATION'])
           else
             # The hardcoded default value
@@ -109,6 +105,8 @@ module Muni
           self.config.api_secrets_csv || ENV['MUNI_API_SECRETS_CSV']
         end
 
+        # The format must follow the ISO 8601 duration format
+        # Example: 'PT15M', 'PT1H', etc
         def parse_iso8601_duration(value)
           ActiveSupport::Duration.parse(value)
         end
