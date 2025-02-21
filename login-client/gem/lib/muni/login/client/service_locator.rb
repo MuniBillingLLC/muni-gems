@@ -23,14 +23,10 @@ module Muni
         end
 
         def fetch_first_healthy(original_url)
-          # original_url is considered healthy if there are no aliases
-          return original_url if service_aliases.size < 2
+          # the original URL must be the first member of the URI group.
+          return nil unless service_aliases.starts_with?(to_uri(original_url))
 
-          # when present, the alias list should always start with the original url
-          # e.g if "b,c" are aliases of "a", then the list must be "a,b,c"
-          return original_url unless service_aliases.starts_with?(original_url)
-
-          # fine, the alias list is matches the original URL and it's not empty
+          # fine, the alias list matches the original URL and it's not empty
           service_aliases.members.each do |uri|
             return uri if is_healthy?(uri: uri)
           end
@@ -116,6 +112,18 @@ module Muni
 
         def gem_settings
           @gem_settings ||= Muni::Login::Client::Settings.new
+        end
+
+        def to_uri(something)
+          if something.blank?
+            nil
+          elsif something.is_a?(String)
+            URI.parse(something)
+          elsif something.is_a?(URI)
+            something
+          else
+            nil
+          end
         end
 
       end

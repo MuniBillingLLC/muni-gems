@@ -25,23 +25,37 @@ RSpec.describe Muni::Login::Client::ServiceLocator do
 
   describe "#fetch_first_healthy" do
 
-    it 'primary_uri' do
-      allow(subj)
-        .to receive(:is_healthy?)
-              .and_return(true)
+    context 'primary_uri' do
+      it do
+        allow(subj)
+          .to receive(:is_healthy?)
+                .and_return(true)
 
-      expect(subj.fetch_first_healthy(primary_uri))
-        .to eq(primary_uri)
+        expect(subj.fetch_first_healthy(primary_uri))
+          .to eq(primary_uri)
+      end
     end
 
-    it 'alternative_uri' do
-      allow(subj)
-        .to receive(:is_healthy?)
-              .and_return(false, true)
+    context 'alternative_uri' do
+      it do
+        allow(subj)
+          .to receive(:is_healthy?)
+                .and_return(false, true)
 
-      expect(subj.fetch_first_healthy(primary_uri))
-        .to eq(alternative_uri)
+        expect(subj.fetch_first_healthy(primary_uri))
+          .to eq(alternative_uri)
+      end
     end
+
+    context 'unlisted_uri' do
+      let(:unlisted_uri) { random_uri }
+      it do
+        expect(subj).to_not receive(:is_healthy?)
+        expect(subj.fetch_first_healthy(unlisted_uri))
+          .to be_nil
+      end
+    end
+
   end
 
 end
