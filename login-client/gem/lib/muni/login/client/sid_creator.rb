@@ -1,8 +1,8 @@
-# Having this class available to the client feels hacky. Ideally we want only the
-# service (e.g. the IDP authority) to create SID's. And this is true for all realms
+# Having this class available to the client feels hacky. Ideally, we want only the
+# service (e.g., the IDP authority) to create SID's. And this is true for all realms
 # except "ApiUser"
-# For "ApiUser", we authorize "in place", with API key acting as a shared secret.
-# E.g. no service call is ever made. Issuing an SID token for the (newly authorized)
+# For "ApiUser", we authorize"in place", with the API key acting as a shared secret.
+# E.g., no service call is ever made. Issuing an SID token for the (newly authorized)
 # API user makes our code more uniform - we can pretend this is just another SID
 # entity, store the SID into the keep and use the exact same implementation for figuring
 # out what the "current identity" for all our principals

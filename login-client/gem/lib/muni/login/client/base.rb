@@ -17,6 +17,10 @@ module Muni
           @dal ||= Muni::Login::Client::DataAccessLayer.new
         end
 
+        def gem_settings
+          @gem_settings ||= Muni::Login::Client::Settings.new
+        end
+
       end
     end
   end

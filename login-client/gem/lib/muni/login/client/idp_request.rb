@@ -128,10 +128,6 @@ module Muni
 
         delegate :sid_cookie_name, :sid_token_from_query_params_allowed?, to: :gem_settings
 
-        def gem_settings
-          @gem_settings ||= Muni::Login::Client::Settings.new
-        end
-
       end
     end
   end

@@ -101,11 +101,6 @@ module Muni
           @system_api_user ||= ApiUser.where("api_key like 'SYSTEM_%'").first || ApiUser.where(locked_at: nil).first
         end
 
-
-        def gem_settings
-          @gem_settings ||= Muni::Login::Client::Settings.new
-        end
-
       end
     end
   end

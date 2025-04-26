@@ -15,7 +15,7 @@ module Muni
                         :api_secrets_csv
 
         # Allow passing of SIDToken via query parameters. This is only
-        # needed in specific cases, and is "false" by default
+        # needed in specific cases and is "false" by default
         def sid_token_from_query_params_allowed?
           self.config.sid_token_from_query_params_allowed == true
         end
@@ -71,6 +71,11 @@ module Muni
           api_secrets.first
         end
 
+        # a shared secret, used for securing the ref token
+        def ref_token_secret
+          self.config.ref_token_secret || ENV['REF_TOKEN_SECRET'] || ENV['RAILS5_ENCRYPTION_KEY']
+        end
+
         # the list of all available api secrets
         def api_secrets
           @api_secrets ||= if api_secrets_csv.present?
@@ -100,13 +105,13 @@ module Muni
 
         private
 
-        # A CSV list of secrets fot this environment
+        # A CSV list of secrets for this environment
         def api_secrets_csv
           self.config.api_secrets_csv || ENV['MUNI_API_SECRETS_CSV']
         end
 
         # The format must follow the ISO 8601 duration format
-        # Example: 'PT15M', 'PT1H', etc
+        # Example:'PT15M' 'PT1H', etc
         def parse_iso8601_duration(value)
           ActiveSupport::Duration.parse(value)
         end

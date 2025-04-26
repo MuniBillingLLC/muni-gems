@@ -40,10 +40,6 @@ module Muni
 
         delegate :api_secrets, to: :gem_settings
 
-        def gem_settings
-          @gem_settings ||= Muni::Login::Client::Settings.new
-        end
-
       end
     end
   end
