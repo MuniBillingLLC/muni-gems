@@ -3,14 +3,13 @@ module Muni
     module Client
       class IdpRequest < Muni::Login::Client::Base
 
-        attr_reader :controller_path, :action_name, :http_headers, :referrer, :query_params, :sid_token_origin
+        attr_reader :controller_path, :action_name, :http_headers, :referrer, :sid_token_origin
 
         def initialize(controller_path:,
                        action_name:,
                        cookie_reader: nil,
                        http_headers: nil,
-                       referrer: nil,
-                       query_params: nil)
+                       referrer: nil)
           @controller_path = controller_path
           @action_name = action_name
           @cookie_reader = cookie_reader
@@ -23,15 +22,6 @@ module Muni
                           else
                             # most likely an instance of ActionDispatch::Http::Headers
                             http_headers
-                          end
-
-          @query_params = if query_params.nil?
-                            HashWithIndifferentAccess.new
-                          elsif query_params.is_a?(Hash)
-                            query_params.with_indifferent_access
-                          else
-                            # most likely an instance of ActionController::Parameters
-                            query_params
                           end
 
           idlog.trace(location: "#{self.class.name}.#{__method__}",
@@ -62,17 +52,6 @@ module Muni
                                        header_name: AUTHORIZATION_HEADER)
                            @sid_token_origin = "request_header"
                            sid_token_from_headers
-                         elsif sid_token_from_query_params.present?
-                           idlog.trace(location: "#{self.class.name}.#{__method__}",
-                                       sid_token_origin: 'query_params',
-                                       param_name: 'sid_token')
-                           @sid_token_origin = "query_params"
-                           sid_token_from_query_params
-                         else
-                           @sid_token_origin = nil
-                           idlog.trace(location: "#{self.class.name}.#{__method__}",
-                                       message: 'sid_token not present')
-                           nil
                          end
         end
 
@@ -111,22 +90,7 @@ module Muni
           http_headers.present? ? http_headers[AUTHORIZATION_HEADER].to_s.split(WHSP).last : nil
         end
 
-        def sid_token_from_query_params
-          original_value = query_params[:sid_token] || query_params['sid_token']
-
-          return nil if original_value.blank?
-
-          if sid_token_from_query_params_allowed?
-            original_value
-          else
-            idlog.warn(location: "#{self.class.name}.#{__method__}",
-                       message: 'value present but not allowed')
-            nil
-          end
-
-        end
-
-        delegate :sid_cookie_name, :sid_token_from_query_params_allowed?, to: :gem_settings
+        delegate :sid_cookie_name, to: :gem_settings
 
       end
     end

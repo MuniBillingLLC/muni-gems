@@ -6,19 +6,12 @@ module Muni
 
         config_accessor :sid_cookie_name,
                         :sid_cookie_duration,
-                        :sid_token_from_query_params_allowed,
                         :idpc_app_name,
                         :idpc_redis_bucket,
                         :idpc_retention,
                         :login_service_url_list,
                         :log_trace_enabled,
                         :api_secrets_csv
-
-        # Allow passing of SIDToken via query parameters. This is only
-        # needed in specific cases and is "false" by default
-        def sid_token_from_query_params_allowed?
-          self.config.sid_token_from_query_params_allowed == true
-        end
 
         # The name of the SID cookie
         def sid_cookie_name
