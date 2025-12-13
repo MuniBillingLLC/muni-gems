@@ -41,7 +41,7 @@ Gem::Specification.new do |s|
     "lib/muni/login/client/errors/malformed_identity.rb",
     "lib/muni/login/client/errors/unauthorized.rb",
 
-    "lib/muni/login/client/wardens/base.rb",
+    "lib/muni/login/client/wardens/abstract_warden.rb",
     "lib/muni/login/client/wardens/sid_warden.rb",
     "lib/muni/login/client/wardens/vendor_warden.rb",
 
