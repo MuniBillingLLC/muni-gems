@@ -9,6 +9,8 @@ Gem::Specification.new do |s|
   s.license = "Nonstandard"
   s.require_paths = ["lib"]
 
+  s.required_ruby_version = '>= 2.4.9'
+
   s.add_dependency "activesupport", '>= 5.2.8'
   s.add_dependency "activerecord", '>= 5.2.8'
   s.add_dependency "actionpack", '>= 5.2.8'
@@ -36,10 +38,15 @@ Gem::Specification.new do |s|
     "lib/muni/login/client/concerns/belongs_to_request.rb",
 
     "lib/muni/login/client/errors/base.rb",
+    "lib/muni/login/client/errors/bad_configuration.rb",
     "lib/muni/login/client/errors/bad_gateway.rb",
     "lib/muni/login/client/errors/forbidden.rb",
     "lib/muni/login/client/errors/malformed_identity.rb",
     "lib/muni/login/client/errors/unauthorized.rb",
+
+    "lib/muni/login/client/ref_tokens/builder.rb",
+    "lib/muni/login/client/ref_tokens/cipher.rb",
+    "lib/muni/login/client/ref_tokens/parser.rb",
 
     "lib/muni/login/client/wardens/abstract_warden.rb",
     "lib/muni/login/client/wardens/sid_warden.rb",
@@ -56,6 +63,7 @@ Gem::Specification.new do |s|
     "lib/muni/login/client/jwt_decoder.rb",
     "lib/muni/login/client/service_locator.rb",
     "lib/muni/login/client/service_proxy.rb",
+    "lib/muni/login/client/settings.rb",
     "lib/muni/login/client/sid_creator.rb",
     "lib/muni/login/client/sid_validator.rb",
     "lib/muni/login/client/tool_box.rb",
