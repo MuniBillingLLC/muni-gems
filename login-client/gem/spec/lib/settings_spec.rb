@@ -110,5 +110,86 @@ RSpec.describe Muni::Login::Client::Settings do
     end
   end
 
+  describe "#sid_cookie_name (ENV fallback)" do
+    around do |example|
+      described_class.configure { |c| c.sid_cookie_name = nil }
+      ClimateControl.modify(MUNI_SID_COOKIE_NAME: 'env-cookie-name') { example.run }
+    end
+
+    it "falls back to ENV when config not set" do
+      expect(subj.sid_cookie_name).to eq('env-cookie-name')
+    end
+  end
+
+  describe "#login_service_url_list (ENV fallback)" do
+    around do |example|
+      described_class.configure { |c| c.login_service_url_list = nil }
+      ClimateControl.modify(LOGIN_SERVICE_URL_LIST: 'http://env.example.com') { example.run }
+    end
+
+    it "falls back to ENV when config not set" do
+      expect(subj.login_service_url_list).to eq('http://env.example.com')
+    end
+  end
+
+  describe "#idpc_redis_bucket" do
+    # Reset the class variable before each test to ensure isolation
+    before do
+      if described_class.class_variable_defined?(:@@idpc_redis_bucket_deprecation_warned)
+        described_class.remove_class_variable(:@@idpc_redis_bucket_deprecation_warned)
+      end
+    end
+
+    it "returns nil" do
+      expect(subj.idpc_redis_bucket).to be_nil
+    end
+
+    context "when explicitly configured (deprecated)" do
+      before do
+        described_class.configure { |c| c.idpc_redis_bucket = 'custom-bucket' }
+      end
+
+      after do
+        described_class.configure { |c| c.idpc_redis_bucket = nil }
+      end
+
+      it "emits deprecation warning and still returns nil" do
+        expect(ActiveSupport::Deprecation).to receive(:warn).with(/idpc_redis_bucket.*deprecated/)
+        expect(subj.idpc_redis_bucket).to be_nil
+      end
+
+      it "emits deprecation warning only once across multiple instances" do
+        expect(ActiveSupport::Deprecation).to receive(:warn).once
+
+        # First call triggers warning
+        described_class.new.idpc_redis_bucket
+        # Second call on different instance should not warn
+        described_class.new.idpc_redis_bucket
+        # Third call should also not warn
+        subj.idpc_redis_bucket
+      end
+    end
+  end
+
+  describe "#ignore_ssl_errors?" do
+    context "when not configured" do
+      before { described_class.configure { |c| c.ignore_ssl_errors = nil } }
+
+      it { expect(subj.ignore_ssl_errors?).to be false }
+    end
+
+    context "when configured true" do
+      before { described_class.configure { |c| c.ignore_ssl_errors = true } }
+
+      it { expect(subj.ignore_ssl_errors?).to be true }
+    end
+
+    context "when configured false" do
+      before { described_class.configure { |c| c.ignore_ssl_errors = false } }
+
+      it { expect(subj.ignore_ssl_errors?).to be false }
+    end
+  end
+
 end
 

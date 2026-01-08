@@ -41,9 +41,16 @@ module Muni
         end
 
         def get_response(uri, headers)
-          Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
+          start_opts = { use_ssl: uri.scheme == 'https' }
+          start_opts[:verify_mode] = OpenSSL::SSL::VERIFY_NONE if gem_settings.ignore_ssl_errors?
+
+          Net::HTTP.start(uri.host, uri.port, start_opts) do |http|
             http.request(Net::HTTP::Get.new(uri.request_uri, base_headers.merge(headers)))
           end
+        end
+
+        def gem_settings
+          @gem_settings ||= Muni::Login::Client::Settings.new
         end
 
         def parse_json(json_string)

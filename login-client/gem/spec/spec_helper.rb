@@ -15,6 +15,7 @@ Rake::Task['db:seed'].invoke
 
 require 'factory_bot_rails'
 require 'faker'
+require 'climate_control'
 
 # Common modules included in all specs
 Dir[Rails.root.join('spec', 'support', '*.rb')].each { |f| require f }

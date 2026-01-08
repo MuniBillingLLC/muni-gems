@@ -66,7 +66,7 @@ RSpec.describe Muni::Login::Client::IdpCache do
     let(:value) { { known_idp_key: "Known IDP value" } }
     it do
       expect(subj.send(:decorated, value))
-        .to eq("spec_bucket.spec_app.idp.a36b83477223d2d5758cd5143459c256")
+        .to eq("spec_app.idp.a36b83477223d2d5758cd5143459c256")
     end
   end
 

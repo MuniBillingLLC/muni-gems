@@ -7,11 +7,11 @@ module Muni
         config_accessor :sid_cookie_name,
                         :sid_cookie_duration,
                         :idpc_app_name,
-                        :idpc_redis_bucket,
                         :idpc_retention,
                         :login_service_url_list,
                         :log_trace_enabled,
-                        :api_secrets_csv
+                        :api_secrets_csv,
+                        :ignore_ssl_errors
 
         # The name of the SID cookie
         def sid_cookie_name
@@ -36,9 +36,12 @@ module Muni
           self.config.idpc_app_name
         end
 
-        # Controls the location of the IDP cache storage in redis
+        # Deprecated. Returns nil; app_name handles namespacing now.
         def idpc_redis_bucket
-          self.config.idpc_redis_bucket || ENV['REDIS_NAMESPACE']
+          if self.config.idpc_redis_bucket.present?
+            emit_idpc_redis_bucket_deprecation_warning
+          end
+          nil
         end
 
         # Controls IDP cache duration
@@ -96,7 +99,23 @@ module Muni
           end
         end
 
+        # Controls SSL certificate verification. When true, SSL errors are ignored.
+        # This is useful for local development with self-signed certificates.
+        def ignore_ssl_errors?
+          self.config.ignore_ssl_errors == true
+        end
+
         private
+
+        def emit_idpc_redis_bucket_deprecation_warning
+          return if self.class.class_variable_defined?(:@@idpc_redis_bucket_deprecation_warned)
+          self.class.class_variable_set(:@@idpc_redis_bucket_deprecation_warned, true)
+
+          ActiveSupport::Deprecation.warn(
+            "Setting 'config.idpc_redis_bucket' is deprecated and will be ignored. " \
+            "The value is now derived from idpc_app_name. Please remove this config."
+          )
+        end
 
         # A CSV list of secrets for this environment
         def api_secrets_csv

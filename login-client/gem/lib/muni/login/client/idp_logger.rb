@@ -3,7 +3,7 @@ module Muni
   module Login
     module Client
       class IdpLogger
-        MUNI_GEM_VERSION = "0.0.42" # keep in sync with "muni-login-client.gemspec"
+        MUNI_GEM_VERSION = "0.0.43" # keep in sync with "muni-login-client.gemspec"
 
         def initialize(idrequest: nil)
           @rails_logger = Rails.logger
