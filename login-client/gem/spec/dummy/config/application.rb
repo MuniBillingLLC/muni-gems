@@ -10,7 +10,7 @@ require "action_controller/railtie"
 # require "action_mailer/railtie"
 require "action_view/railtie"
 # require "action_cable/engine"
-require "sprockets/railtie"
+# require "sprockets/railtie"
 # require "rails/test_unit/railtie"
 
 # Require the gems listed in Gemfile, including any gems
@@ -30,6 +30,6 @@ module Dummy
     # Don't generate system test files.
     config.generators.system_tests = nil
 
-    config.active_record.sqlite3.represent_boolean_as_integer = true
+    config.load_defaults 6.1
   end
 end

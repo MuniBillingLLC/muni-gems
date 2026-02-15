@@ -9,16 +9,16 @@ RSpec.describe Muni::Login::Client::IdpLogger do
   end
 
   describe "#info" do
-    it "logs with info level" do
-      expect(rails_logger).to receive(:info).with(hash_including(level: "info"))
+    it "logs JSON with info level" do
+      expect(rails_logger).to receive(:info).with(a_string_including('"level":"info"'))
       subj.info(location: "Test", message: "test message")
     end
 
     it "includes gem_version and topic" do
       expect(rails_logger).to receive(:info).with(
-        hash_including(
-          gem_version: Muni::Login::Client::IdpLogger::MUNI_GEM_VERSION,
-          topic: "muni_login_client"
+        a_string_including(
+          %("gem_version":"#{Muni::Login::Client::IdpLogger::MUNI_GEM_VERSION}"),
+          '"topic":"muni_login_client"'
         )
       )
       subj.info("test")
@@ -26,15 +26,15 @@ RSpec.describe Muni::Login::Client::IdpLogger do
   end
 
   describe "#warn" do
-    it "logs with warn level" do
-      expect(rails_logger).to receive(:warn).with(hash_including(level: "warn"))
+    it "logs JSON with warn level" do
+      expect(rails_logger).to receive(:warn).with(a_string_including('"level":"warn"'))
       subj.warn("warning message")
     end
   end
 
   describe "#error" do
-    it "logs with error level" do
-      expect(rails_logger).to receive(:error).with(hash_including(level: "error"))
+    it "logs JSON with error level" do
+      expect(rails_logger).to receive(:error).with(a_string_including('"level":"error"'))
       subj.error("error message")
     end
   end
@@ -46,8 +46,8 @@ RSpec.describe Muni::Login::Client::IdpLogger do
           .to receive(:log_trace_enabled?).and_return(true)
       end
 
-      it "logs with trace level" do
-        expect(rails_logger).to receive(:info).with(hash_including(level: "trace"))
+      it "logs JSON with trace level" do
+        expect(rails_logger).to receive(:info).with(a_string_including('"level":"trace"'))
         subj.trace("trace message")
       end
     end
@@ -71,7 +71,7 @@ RSpec.describe Muni::Login::Client::IdpLogger do
     it "binds the idrequest for context" do
       subj.bind(idrequest: idrequest)
       expect(rails_logger).to receive(:info).with(
-        hash_including(api_vector: "test_vector", action_signature: "test#action")
+        a_string_including('"api_vector":"test_vector"', '"action_signature":"test#action"')
       )
       subj.info("test")
     end

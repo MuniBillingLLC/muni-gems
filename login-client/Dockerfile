@@ -4,7 +4,7 @@ FROM ${BASE_IMAGE}
 
 ARG HOST_UID=0
 ARG HOST_GID=0
-ARG RUBY_VERSION=2.4.9
+ARG RUBY_VERSION=3.1.3
 
 # a directory for storing image artifacts. This should be strictly data & logs
 # no executables / source code please
@@ -28,7 +28,7 @@ RUN \
     apt-get update && \
     apt-get install -y curl nano wget software-properties-common build-essential \
             default-libmysqlclient-dev mysql-client libxslt-dev libxml2-dev \
-            sqlite3 libsqlite3-dev tzdata dos2unix iputils-ping
+            sqlite3 libsqlite3-dev tzdata dos2unix iputils-ping libssl-dev
 
 # install RVM for all users
 RUN \
@@ -37,11 +37,10 @@ RUN \
     curl -sSL https://get.rvm.io | bash -s stable
 
 
-# install ruby for all users & ugrade to a more recent version fo rubygems
+# install ruby for all users & upgrade to a more recent version of rubygems
 RUN \
     /bin/bash -c "source /etc/profile.d/rvm.sh && \
-    rvm pkg install openssl && \
-    rvm install ${RUBY_VERSION} --with-openssl-dir=/usr/local/rvm/usr && \
+    rvm install ${RUBY_VERSION} && \
     gem update --system 3.3.26 --no-document"
 
 # bring the source into the container

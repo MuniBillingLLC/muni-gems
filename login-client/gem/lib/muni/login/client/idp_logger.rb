@@ -3,7 +3,7 @@ module Muni
   module Login
     module Client
       class IdpLogger
-        MUNI_GEM_VERSION = "0.0.43" # keep in sync with "muni-login-client.gemspec"
+        MUNI_GEM_VERSION = "0.0.44" # keep in sync with "muni-login-client.gemspec"
 
         def initialize(idrequest: nil)
           @rails_logger = Rails.logger
@@ -19,20 +19,20 @@ module Muni
         # information
         def trace(message)
           if log_trace_enabled?
-            @rails_logger.info decorate(message: message, level: "trace")
+            @rails_logger.info decorate(message: message, level: "trace").to_json
           end
         end
 
         def info(message)
-          @rails_logger.info decorate(message: message, level: "info")
+          @rails_logger.info decorate(message: message, level: "info").to_json
         end
 
         def warn(message)
-          @rails_logger.warn decorate(message: message, level: "warn")
+          @rails_logger.warn decorate(message: message, level: "warn").to_json
         end
 
         def error(message)
-          @rails_logger.error decorate(message: message, level: "error")
+          @rails_logger.error decorate(message: message, level: "error").to_json
         end
 
         private

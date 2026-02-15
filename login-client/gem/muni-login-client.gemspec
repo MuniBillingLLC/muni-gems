@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = "muni-login-client"
-  s.version = "0.0.43" # keep in sync with "lib/muni/login/client/idp_logger.rb"
+  s.version = "0.0.44" # keep in sync with "lib/muni/login/client/idp_logger.rb"
   s.summary = "Muni Login Client"
   s.description = "Ruby client for Muni Login Service SSO authentication and session management"
   s.authors = ["Muni Billing"]
@@ -9,26 +9,21 @@ Gem::Specification.new do |s|
   s.license = "Nonstandard"
   s.require_paths = ["lib"]
 
-  s.required_ruby_version = '>= 2.4.9'
+  s.required_ruby_version = '>= 3.1.3'
 
-  s.add_dependency "activesupport", '>= 5.2.8'
-  s.add_dependency "activerecord", '>= 5.2.8'
-  s.add_dependency "actionpack", '>= 5.2.8'
+  s.add_dependency "activesupport", '~> 6.1.7.10'
+  s.add_dependency "activerecord", '~> 6.1.7.10'
+  s.add_dependency "actionpack", '~> 6.1.7.10'
   s.add_dependency "jwt", '>= 2.3.0'
 
-  s.add_development_dependency 'rails', '>= 5.2.8'
+  s.add_development_dependency 'rails', '~> 6.1.7.10'
   s.add_development_dependency 'rake', '~> 13.0', '>= 13.0.6'
   s.add_development_dependency 'rspec', '~> 3.12', '>= 3.12.0'
   s.add_development_dependency 'rspec-rails', '~> 5.0'
   s.add_development_dependency 'sqlite3', '~> 1.4', '>= 1.4.4'
   s.add_development_dependency 'faker', '~> 2.0'
   s.add_development_dependency 'factory_bot_rails', '~> 5.2', '>= 5.2.0'
-  s.add_development_dependency 'nokogiri', '~> 1.10', '>= 1.10.10'
   s.add_development_dependency 'climate_control', '~> 0.2.0'
-
-  # added this to work around "uninitialized constant Nokogiri::HTML4"
-  # per https://www.ruby-forum.com/t/i-am-using-ruby-version-2-3-8-and-rails-version-5-2-6-to-develop-my-application-since-yesterday-i-am-getting-the-error-i-tried-to-find-the-occurrence-of-this-nokogiri-html4-in-my-application-but-i-didnt-find-any-of-the-occurrence-like-this/263852
-  s.add_development_dependency 'loofah', '~>2.19.1'
 
   s.files = [
     "LICENSE",
