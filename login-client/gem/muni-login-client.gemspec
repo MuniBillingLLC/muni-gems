@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = "muni-login-client"
-  s.version = "0.0.44" # keep in sync with "lib/muni/login/client/idp_logger.rb"
+  s.version = "0.0.45" # keep in sync with "lib/muni/login/client/idp_logger.rb"
   s.summary = "Muni Login Client"
   s.description = "Ruby client for Muni Login Service SSO authentication and session management"
   s.authors = ["Muni Billing"]
@@ -11,12 +11,12 @@ Gem::Specification.new do |s|
 
   s.required_ruby_version = '>= 3.1.3'
 
-  s.add_dependency "activesupport", '~> 6.1.7.10'
-  s.add_dependency "activerecord", '~> 6.1.7.10'
-  s.add_dependency "actionpack", '~> 6.1.7.10'
+  s.add_dependency "activesupport", '>= 6.1', '< 8'
+  s.add_dependency "activerecord", '>= 6.1', '< 8'
+  s.add_dependency "actionpack", '>= 6.1', '< 8'
   s.add_dependency "jwt", '>= 2.3.0'
 
-  s.add_development_dependency 'rails', '~> 6.1.7.10'
+  s.add_development_dependency 'rails', '>= 6.1', '< 8'
   s.add_development_dependency 'rake', '~> 13.0', '>= 13.0.6'
   s.add_development_dependency 'rspec', '~> 3.12', '>= 3.12.0'
   s.add_development_dependency 'rspec-rails', '~> 5.0'
